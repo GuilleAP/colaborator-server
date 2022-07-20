@@ -34,6 +34,19 @@ router.post('/card/new-card', (req, res) => {
     .catch(err =>  res.status(400).json(err));
 });
 
+router.put('/card/updateCard/:id/:stat', (req, res) => {
+
+    Card.findByIdAndUpdate(req.params.id, {    
+        stat: req.params.stat.toUpperCase()
+    })
+    .then((cardUpdated) => {
+
+        res.json(cardUpdated);
+    })
+    .catch(err => res.json(err))
+
+});
+
 
 
 
