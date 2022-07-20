@@ -16,6 +16,9 @@ app.use("/colaborator-API", allRoutes);
 const authRouter = require("./routes/user_routes/auth.routes");
 app.use("/colaborator-API/auth", authRouter);
 
+const userRouter = require("./routes/user_routes/user.routes");
+app.use("/colaborator-API/users", userRouter);
+
 const projectRoutes = require("./routes/project_routes/project.routes");
 app.use("/colaborator-API/projects", projectRoutes);
 
