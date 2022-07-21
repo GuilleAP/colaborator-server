@@ -14,6 +14,8 @@ const projectSchema = new Schema(
     description: String,
     tech: String,
     endAt: Date,
+    admin:{ type: Schema.Types.ObjectId, ref: "User" },
+    team: [{ type: Schema.Types.ObjectId, ref: "User" }],
     // lastUpdate: String,
     cards: [{ type: Schema.Types.ObjectId, ref: "Card" }]
   },
