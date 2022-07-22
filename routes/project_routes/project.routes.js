@@ -4,16 +4,32 @@ const Card = require("../../models/Card.model");
 const mongoose = require('mongoose');
 
 //  POST /api/projects  -  Creates a new project
-router.post("/new-project", (req, res, next) => {
-  const { title, description, team, tech } = req.body;
+router.post("/", (req, res, next) => {
+  const { title, description, team, active, tech } = req.body;
 
-  Project.create({ title, description, team, tech, cards: [] })
+  Project.create({ title, description, team, active, tech, cards: [] })
     .then((response) => res.json(response))
     .catch((err) => res.json(err));
 });
 
 router.get("/", (req, res, next) => {
   Project.find()
+    .populate("cards")
+    .populate("team")
+    .then((allProjects) => res.json(allProjects))
+    .catch((err) => res.json(err));
+});
+
+router.get("/current", (req, res, next) => {
+  Project.find({active:true})
+    .populate("cards")
+    .populate("team")
+    .then((allProjects) => res.json(allProjects))
+    .catch((err) => res.json(err));
+});
+
+router.get("/completed", (req, res, next) => {
+  Project.find({active:false})
     .populate("cards")
     .populate("team")
     .then((allProjects) => res.json(allProjects))
@@ -52,7 +68,7 @@ router.put("/:projectId", (req, res, next) => {
 });
 
 // DELETE  /api/projects/:projectId  -  Deletes a specific project by id
-router.delete("/delete/:projectId", (req, res, next) => {
+router.delete("/:projectId", (req, res, next) => {
   const { projectId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(projectId)) {
