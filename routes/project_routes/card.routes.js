@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const mongoose = require('mongoose');
 
 const Card = require("../../models/Card.model");
 
@@ -19,14 +20,18 @@ router.get('/card/get-cards', (req, res) => {
 /**
  * Ruta para crear una nueva targeta dentro de un proyecto
  */
-router.post('/card/new-card', (req, res) => {
-
-    const {title, description, stat} = req.body;
+router.post('/:projectId/card/new-card', (req, res) => {
+    console.log(req.body)
+    const projectId = req.params.projectId;
+    const {title, description, color, stat} = req.body;
+    console.log("ID del projecte: ", projectId)
 
     Card.create({
         title: title, 
         description: description, 
-        stat: stat
+        stat: stat,
+        project: projectId,
+        color: color
     })
     .then((newCardResponse) => {
         res.status(201).json(newCardResponse)
@@ -46,6 +51,24 @@ router.put('/card/updateCard/:id/:stat', (req, res) => {
     .catch(err => res.json(err))
 
 });
+
+router.delete('/card/delete/:id', (req, res) => {
+    const taskId  = req.params.id;
+    console.log(taskId)
+
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+        res.status(400).json({ message: "Specified id is not valid" });
+        return;
+    }
+
+    Card.findByIdAndRemove(taskId)
+        .then(() =>
+        res.json({
+            message: `Project with ${projectId} is removed successfully.`,
+        })
+        )
+        .catch((error) => res.json(error));
+})
 
 
 

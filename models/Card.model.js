@@ -15,7 +15,15 @@ const cardSchema = new Schema(
         stat: {
             type: String,
             enum: ['TODO', 'PROGRESS', 'DONE']
-        }
+        },
+
+        color: {
+            type: String,
+            enum:['white', 'blue', 'red', 'yellow', 'gray', 'orange', 'green']
+        },
+
+        project: { type: Schema.Types.ObjectId, ref: "Project" }
+
     }
 );
  
