@@ -22,6 +22,10 @@ const cardSchema = new Schema(
             enum:['white', 'blue', 'red', 'yellow', 'gray', 'orange', 'green']
         },
 
+        limitDate: {
+            type: String
+        },
+
         project: { type: Schema.Types.ObjectId, ref: "Project" }
 
     }

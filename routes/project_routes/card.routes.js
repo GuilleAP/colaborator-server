@@ -21,9 +21,9 @@ router.get('/card/get-cards', (req, res) => {
  * Ruta para crear una nueva targeta dentro de un proyecto
  */
 router.post('/:projectId/card/new-card', (req, res) => {
-    console.log(req.body)
+    console.log("Tasca creada: ", req.body)
     const projectId = req.params.projectId;
-    const {title, description, color, stat} = req.body;
+    const {title, description, color, stat, limitDate} = req.body;
     console.log("BODY: ", req.body)
 
     Card.create({
@@ -31,7 +31,8 @@ router.post('/:projectId/card/new-card', (req, res) => {
         description: description, 
         stat: stat,
         project: projectId,
-        color: color
+        color: color,
+        limitDate: limitDate
     })
     .then((newCardResponse) => {
         res.status(201).json(newCardResponse)
@@ -71,7 +72,7 @@ router.delete('/card/delete/:id', (req, res) => {
 })
 
 router.get('/card/edit/:id', (req, res) => {
-    console.log("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+
     const taskId = req.params.id;
 
     Card.findById(taskId)
@@ -81,6 +82,23 @@ router.get('/card/edit/:id', (req, res) => {
         })
         .catch((error) => res.json(error));
 })
+
+router.put('/card/updateCard/:id', (req, res) => {
+
+    const { title, description, color } = req.body;
+
+    Card.findByIdAndUpdate(req.params.id, {    
+        title: title,
+        description: description,
+        color: color
+    })
+    .then((cardUpdated) => {
+
+        res.json(cardUpdated);
+    })
+    .catch(err => res.json(err))
+
+});
 
 
 
