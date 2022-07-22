@@ -8,7 +8,7 @@ router.post("/", (req, res, next) => {
   const { title, description, team, active, tech } = req.body;
 
   Project.create({ title, description, team, active, tech, cards: [] })
-    .then((response) => res.json(response))
+    .then((response) => res.status(200).json(response))
     .catch((err) => res.json(err));
 });
 
@@ -16,7 +16,7 @@ router.get("/", (req, res, next) => {
   Project.find()
     .populate("cards")
     .populate("team")
-    .then((allProjects) => res.json(allProjects))
+    .then((allProjects) => res.status(200).json(allProjects))
     .catch((err) => res.json(err));
 });
 
@@ -24,7 +24,7 @@ router.get("/current", (req, res, next) => {
   Project.find({active:true})
     .populate("cards")
     .populate("team")
-    .then((allProjects) => res.json(allProjects))
+    .then((allProjects) => res.status(200).json(allProjects))
     .catch((err) => res.json(err));
 });
 
@@ -32,7 +32,7 @@ router.get("/completed", (req, res, next) => {
   Project.find({active:false})
     .populate("cards")
     .populate("team")
-    .then((allProjects) => res.json(allProjects))
+    .then((allProjects) => res.status(200).json(allProjects))
     .catch((err) => res.json(err));
 });
 
@@ -63,7 +63,7 @@ router.put("/:projectId", (req, res, next) => {
   }
 
   Project.findByIdAndUpdate(projectId, req.body, { new: true })
-    .then((updatedProject) => res.json(updatedProject))
+    .then((updatedProject) => res.status(200).json(updatedProject))
     .catch((error) => res.json(error));
 });
 
@@ -78,7 +78,7 @@ router.delete("/:projectId", (req, res, next) => {
 
   Project.findByIdAndRemove(projectId)
     .then(() =>
-      res.json({
+      res.status(200).json({
         message: `Project with ${projectId} is removed successfully.`,
       })
     )

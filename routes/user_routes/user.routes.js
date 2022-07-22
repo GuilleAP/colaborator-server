@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 
 
 router.get("/", (req, res, next) => {
+
     User.find()
-      .then((allUsers) => res.json(allUsers))
+      .then((allUsers) => res.status(200).json(allUsers))
       .catch((err) => res.json(err));
   });
 
