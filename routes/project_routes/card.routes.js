@@ -24,7 +24,7 @@ router.post('/:projectId/card/new-card', (req, res) => {
     console.log(req.body)
     const projectId = req.params.projectId;
     const {title, description, color, stat} = req.body;
-    console.log("ID del projecte: ", projectId)
+    console.log("BODY: ", req.body)
 
     Card.create({
         title: title, 
@@ -67,6 +67,18 @@ router.delete('/card/delete/:id', (req, res) => {
             message: `Project with ${projectId} is removed successfully.`,
         })
         )
+        .catch((error) => res.json(error));
+})
+
+router.get('/card/edit/:id', (req, res) => {
+    console.log("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+    const taskId = req.params.id;
+
+    Card.findById(taskId)
+        .then((taskResponse) => {
+            console.log(taskResponse)
+            res.status(200).json(taskResponse);
+        })
         .catch((error) => res.json(error));
 })
 
