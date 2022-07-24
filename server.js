@@ -32,21 +32,51 @@ io.on("connection", (socket) =>{
   const user = socket.decoded_token
   console.log("User connecting: " + user.name)
 
+  //Projects controller
   socket.on("new_project", (newProject)=>{
     const { title, description, admin, team, active, tech } = newProject;
     console.log("Creating new project: ", title)
     Project.create({ title, description, admin, team, active, tech, cards: [] })
       .then((newProject) => {
-      console.log("🚀 ~ file: server.js ~ line 40 ~ .then ~ newProject", newProject)
-        
-        io.emit("receive_new_project", newProject) //sends the message to the sender
+        console.log("🚀 ~ file: server.js ~ line 40 ~ .then ~ newProject", newProject)
+        io.emit("receive_new_project", newProject)
       })
       .catch((err) => res.json(err));
       // User.findBy({_id:{$in: team}})
   })
 
+  socket.on("edit_project", (updatedProject)=>{
+    const {projectId, title, description} = updatedProject;
+
+    // if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    //   res.status(400).json({ message: "Specified id is not valid" });
+    //   return;
+    // }
+  
+    Project.findByIdAndUpdate(projectId, {title, description}, { new: true })
+      .then((updatedProject) =>{
+        io.emit("receive_edit_project", updatedProject)
+      })
+      .catch((error) => res.json(error));
+  })
 
 
+  socket.on("delete_project", (projectId)=>{
+
+    // if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    //   res.status(400).json({ message: "Specified id is not valid" });
+    //   return;
+    // }
+  
+    Project.findByIdAndRemove(projectId)
+      .then(() =>
+        io.emit("receive_delete_project")
+      )
+      .catch((error) => res.json(error));
+  })
+
+
+  //Chat controller
   socket.once("join_chat", (chatId) =>{
     socket.join(chatId) //creates a socket room with chatId and adds the user to it
     console.log(`user: ${user.name} entering room: ${chatId}`)
