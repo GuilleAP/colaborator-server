@@ -46,14 +46,14 @@ io.on("connection", (socket) =>{
   })
 
   socket.on("edit_project", (updatedProject)=>{
-    const {projectId, title, description} = updatedProject;
+    const {projectId, title, description, team} = updatedProject;
 
     // if (!mongoose.Types.ObjectId.isValid(projectId)) {
     //   res.status(400).json({ message: "Specified id is not valid" });
     //   return;
     // }
   
-    Project.findByIdAndUpdate(projectId, {title, description}, { new: true })
+    Project.findByIdAndUpdate(projectId, {title, description, team}, { new: true })
       .then((updatedProject) =>{
         io.emit("receive_edit_project", updatedProject)
       })
