@@ -71,7 +71,6 @@ router.delete('/card/delete/:id', (req, res) => {
 })
 
 router.get('/card/edit/:id', (req, res) => {
-    console.log("ENTRAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
     const taskId = req.params.id;
 
     Card.findById(taskId)
