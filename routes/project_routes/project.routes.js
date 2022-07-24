@@ -29,7 +29,6 @@ router.get("/", (req, res, next) => {
 
 router.get("/:userId/current", (req, res, next) => {
   const { userId } = req.params;
-  console.log('Im here!!!!!!')
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
@@ -44,7 +43,6 @@ router.get("/:userId/current", (req, res, next) => {
 
 router.get("/:userId/completed", (req, res, next) => {
   const { userId } = req.params;
-  console.log('Im here!!!!!!')
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     res.status(400).json({ message: "Specified id is not valid" });
     return;
@@ -56,23 +54,6 @@ router.get("/:userId/completed", (req, res, next) => {
     .then((allProjects) => res.status(200).json(allProjects))
     .catch((err) => res.json(err));
 });
-
-
-// router.get("/current", (req, res, next) => {
-//   Project.find({active:true})
-//     .populate("cards")
-//     .populate("team")
-//     .then((allProjects) => res.status(200).json(allProjects))
-//     .catch((err) => res.json(err));
-// });
-
-// router.get("/completed", (req, res, next) => {
-//   Project.find({active:false})
-//     .populate("cards")
-//     .populate("team")
-//     .then((allProjects) => res.status(200).json(allProjects))
-//     .catch((err) => res.json(err));
-// });
 
 router.get("/:projectId", (req, res, next) => {
   const { projectId } = req.params;
