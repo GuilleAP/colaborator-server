@@ -40,7 +40,6 @@ io.on("connection", (socket) =>{
     console.log("Creating new project: ", title)
     Project.create({ title, description, admin, team, active, tech, cards: [] })
       .then((newProject) => {
-        console.log("🚀 ~ file: server.js ~ line 40 ~ .then ~ newProject", newProject)
         io.emit("receive_new_project", newProject)
       })
       .catch((err) => console.log(err));
@@ -82,7 +81,6 @@ io.on("connection", (socket) =>{
 
   //Tasks controller
   socket.on("new_task", (projectId, newTask)=>{
-    console.log("BODY: ", newTask )
 
     const {title, description, color, stat} = newTask;
 
@@ -116,6 +114,23 @@ io.on("connection", (socket) =>{
     })
     .catch(err => console.log(err))
 })
+
+  socket.on("edit_task_state", (taskId, state)=>{
+  console.log("🚀 ~ file: server.js ~ line 120 ~ socket.on ~ taskId", taskId)
+  console.log("🚀 ~ file: server.js ~ line 133 ~ socket.on ~ state", state)
+
+    
+    Card.findByIdAndUpdate(taskId, {    
+      stat: state.toUpperCase()
+  })
+    .then((cardUpdated) => {
+
+      io.emit("receive_edit_task_state")
+
+    })
+    .catch(err => console.log(err))
+
+  })
 
 
 socket.on("delete_task", (taskId)=>{

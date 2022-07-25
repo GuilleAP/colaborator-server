@@ -10,7 +10,6 @@ router.get('/card/get-cards', (req, res) => {
 
     Card.find()
     .then((allCards) => {
-        console.log(allCards)
         res.status(200).json(allCards)
     })
     .catch(err => res.status(400).json(err));
