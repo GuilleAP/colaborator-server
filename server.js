@@ -116,9 +116,6 @@ io.on("connection", (socket) =>{
 })
 
   socket.on("edit_task_state", (taskId, state)=>{
-  console.log("🚀 ~ file: server.js ~ line 120 ~ socket.on ~ taskId", taskId)
-  console.log("🚀 ~ file: server.js ~ line 133 ~ socket.on ~ state", state)
-
     
     Card.findByIdAndUpdate(taskId, {    
       stat: state.toUpperCase()
@@ -142,22 +139,6 @@ socket.on("delete_task", (taskId)=>{
       )
       .catch((error) => console.log(error));
 })
-
-
-
-  // socket.on("edit_task", taskId, )=>{
-
-  //   Card.findById(taskId)
-  //       .then((taskResponse) => {
-  //           console.log(taskResponse)
-  //           res.status(200).json(taskResponse);
-  //       })
-  //       .catch((error) => res.json(error));
-  // })
-
-
-
-
 
 
   //Chat controller

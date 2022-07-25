@@ -27,6 +27,26 @@ router.get("/", (req, res, next) => {
 });
 
 
+router.get("/:projectId/team", (req, res, next) => {
+  const { projectId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  // Each Project document has `cards` array holding `_id`s of Card documents
+  // We use .populate() method to get swap the `_id`s for the actual Card documents
+  Project.findById(projectId)
+    .populate("cards")
+    .populate("team")
+    .then((project) => res.status(200).json(project.team))
+    .catch((error) => res.json(error));
+});
+
+
+
+
 router.get("/:userId/current", (req, res, next) => {
   const { userId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(userId)) {
