@@ -118,6 +118,18 @@ io.on("connection", (socket) =>{
 })
 
 
+socket.on("delete_task", (taskId)=>{
+  
+  Card.findByIdAndRemove(taskId)
+      .then(() =>
+      io.emit("receive_delete_task")
+
+      )
+      .catch((error) => console.log(error));
+})
+
+
+
   // socket.on("edit_task", taskId, )=>{
 
   //   Card.findById(taskId)
