@@ -99,6 +99,19 @@ io.on("connection", (socket) =>{
     .catch(err =>  res.status(400).json(err));
   })
 
+  // socket.on("edit_task", taskId, )=>{
+
+  //   Card.findById(taskId)
+  //       .then((taskResponse) => {
+  //           console.log(taskResponse)
+  //           res.status(200).json(taskResponse);
+  //       })
+  //       .catch((error) => res.json(error));
+  // })
+
+
+
+
 
 
   //Chat controller
