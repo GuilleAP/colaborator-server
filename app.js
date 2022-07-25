@@ -25,6 +25,7 @@ app.use("/colaborator-API/projects", projectRoutes);
 const cardRoutes = require("./routes/project_routes/card.routes");
 app.use("/colaborator-API/projects", cardRoutes);
 
-
+const chatRoutes = require("./routes/chat_routes/chat.routes");
+app.use("/colaborator-API/chat", isAuthenticated, chatRoutes);
 
 module.exports = app;

@@ -35,7 +35,7 @@ router.post('/:projectId/card/new-card', (req, res) => {
         limitDate: limitDate
     })
     .then((newCardResponse) => {
-        res.status(201).json(newCardResponse)
+        res.status(200).json(newCardResponse)
     })
     .catch(err =>  res.status(400).json(err));
 });
@@ -47,7 +47,7 @@ router.put('/card/updateCard/:id/:stat', (req, res) => {
     })
     .then((cardUpdated) => {
 
-        res.json(cardUpdated);
+        res.status(200).json(cardUpdated);
     })
     .catch(err => res.json(err))
 
