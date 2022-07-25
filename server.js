@@ -43,7 +43,7 @@ io.on("connection", (socket) =>{
         console.log("🚀 ~ file: server.js ~ line 40 ~ .then ~ newProject", newProject)
         io.emit("receive_new_project", newProject)
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
       // User.findBy({_id:{$in: team}})
   })
 
@@ -59,7 +59,7 @@ io.on("connection", (socket) =>{
       .then((updatedProject) =>{
         io.emit("receive_edit_project", updatedProject)
       })
-      .catch((error) => res.json(error));
+      .catch((error) => console.log(error));
   })
 
 
@@ -74,7 +74,7 @@ io.on("connection", (socket) =>{
       .then(() =>
         io.emit("receive_delete_project")
       )
-      .catch((error) => res.json(error));
+      .catch((error) => console.log(error));
   })
 
 
@@ -98,6 +98,25 @@ io.on("connection", (socket) =>{
     })
     .catch(err =>  res.status(400).json(err));
   })
+
+
+
+  socket.on("edit_task", (task)=>{
+    const {taskId, title, description, color} = task;
+  
+    Card.findByIdAndUpdate(taskId, {    
+      title: title,
+      description: description,
+      color: color
+    })
+    .then((taskUpdated) => {
+
+    io.emit("receive_edit_task", taskUpdated)
+
+    })
+    .catch(err => console.log(err))
+})
+
 
   // socket.on("edit_task", taskId, )=>{
 
