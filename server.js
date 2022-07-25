@@ -1,5 +1,7 @@
 const app = require("./app");
 const Project = require("./models/Project.model");
+const Card = require("./models/Card.model");
+
 // const Project = require("../../models/Project.model");
 // ℹ️ Sets the PORT for our app to have access to it. If no env has been set, we hard code it to 3000
 const PORT = process.env.PORT || 5005;
@@ -74,6 +76,29 @@ io.on("connection", (socket) =>{
       )
       .catch((error) => res.json(error));
   })
+
+
+
+
+  //Tasks controller
+  socket.on("new_task", (projectId, newTask)=>{
+    console.log("BODY: ", newTask )
+
+    const {title, description, color, stat} = newTask;
+
+    Card.create({
+        title: title, 
+        description: description, 
+        stat: stat,
+        project: projectId,
+        color: color
+    })
+    .then((newCardResponse) => {
+      io.emit("receive_new_task", newTask)
+    })
+    .catch(err =>  res.status(400).json(err));
+  })
+
 
 
   //Chat controller
