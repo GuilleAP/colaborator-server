@@ -153,6 +153,8 @@ socket.on("delete_task", (taskId)=>{
     await Message.create(fullMessage)
     //Sends changes to all sockets users
     socket.to(fullMessage.chatId).emit("receive_message", fullMessage) //sends the message to all socket room users except the sender
+    io.emit("receive_alert_message", fullMessage.chatId) //sends the message to all socket room users except the sender
+
     socket.emit("receive_message", fullMessage) //sends the message to the sender
   })
 
