@@ -82,14 +82,15 @@ io.on("connection", (socket) =>{
   //Tasks controller
   socket.on("new_task", (projectId, newTask)=>{
 
-    const {title, description, color, stat} = newTask;
+    const {title, description, color, stat, limitDate} = newTask;
 
     Card.create({
         title: title, 
         description: description, 
         stat: stat,
         project: projectId,
-        color: color
+        color: color,
+        limitDate: limitDate
     })
     .then((newCardResponse) => {
       io.emit("receive_new_task", newTask)
@@ -153,7 +154,7 @@ socket.on("delete_task", (taskId)=>{
     await Message.create(fullMessage)
     //Sends changes to all sockets users
     socket.to(fullMessage.chatId).emit("receive_message", fullMessage) //sends the message to all socket room users except the sender
-    io.emit("receive_alert_message", fullMessage.chatId) //sends the message to all socket room users except the sender
+    io.emit("receive_alert_message") //sends the message to all socket room users except the sender
 
     socket.emit("receive_message", fullMessage) //sends the message to the sender
   })
