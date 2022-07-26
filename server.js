@@ -36,45 +36,34 @@ io.on("connection", (socket) =>{
 
   //Projects controller
   socket.on("new_project", (newProject)=>{
-    const { title, description, admin, team, active, tech } = newProject;
-    console.log("Creating new project: ", title)
-    Project.create({ title, description, admin, team, active, tech, cards: [] })
-      .then((newProject) => {
-        console.log("🚀 ~ file: server.js ~ line 40 ~ .then ~ newProject", newProject)
+    // const { title, description, admin, team, active, tech } = newProject;
+    // console.log("Creating new project: ", title)
+    // Project.create({ title, description, admin, team, active, tech, cards: [] })
+    //   .then((newProject) => {
         io.emit("receive_new_project", newProject)
-      })
-      .catch((err) => res.json(err));
-      // User.findBy({_id:{$in: team}})
+      // })
+      // .catch((err) => console.log(err));
   })
 
   socket.on("edit_project", (updatedProject)=>{
     const {projectId, title, description, team} = updatedProject;
 
-    // if (!mongoose.Types.ObjectId.isValid(projectId)) {
-    //   res.status(400).json({ message: "Specified id is not valid" });
-    //   return;
-    // }
-  
-    Project.findByIdAndUpdate(projectId, {title, description, team}, { new: true })
-      .then((updatedProject) =>{
+    // Project.findByIdAndUpdate(projectId, {title, description, team}, { new: true })
+    //   .then((updatedProject) =>{
         io.emit("receive_edit_project", updatedProject)
-      })
-      .catch((error) => res.json(error));
+      // })
+      // .catch((error) => console.log(error));
   })
 
 
   socket.on("delete_project", (projectId)=>{
 
-    // if (!mongoose.Types.ObjectId.isValid(projectId)) {
-    //   res.status(400).json({ message: "Specified id is not valid" });
-    //   return;
-    // }
   
-    Project.findByIdAndRemove(projectId)
-      .then(() =>
+    // Project.findByIdAndRemove(projectId)
+    //   .then(() =>
         io.emit("receive_delete_project")
-      )
-      .catch((error) => res.json(error));
+      // )
+      // .catch((error) => console.log(error));
   })
 
 
@@ -82,37 +71,65 @@ io.on("connection", (socket) =>{
 
   //Tasks controller
   socket.on("new_task", (projectId, newTask)=>{
-    console.log("BODY: ", newTask )
 
-    const {title, description, color, stat, limitDate} = newTask;
+    // const {title, description, color, stat, limitDate} = newTask;
 
-    Card.create({
-        title: title, 
-        description: description, 
-        stat: stat,
-        project: projectId,
-        color: color,
-        limitDate: limitDate
-    })
-    .then((newCardResponse) => {
+    // Card.create({
+    //     title: title, 
+    //     description: description, 
+    //     stat: stat,
+    //     project: projectId,
+    //     color: color,
+    //     limitDate: limitDate
+    // })
+    // .then((newCardResponse) => {
       io.emit("receive_new_task", newTask)
-    })
-    .catch(err =>  res.status(400).json(err));
+    // })
+    // .catch(err =>  res.status(400).json(err));
   })
 
-  // socket.on("edit_task", taskId, )=>{
 
-  //   Card.findById(taskId)
-  //       .then((taskResponse) => {
-  //           console.log(taskResponse)
-  //           res.status(200).json(taskResponse);
-  //       })
-  //       .catch((error) => res.json(error));
+
+  socket.on("edit_task", (task)=>{
+    // const {taskId, title, description, color} = task;
+  
+    // Card.findByIdAndUpdate(taskId, {    
+    //   title: title,
+    //   description: description,
+    //   color: color
+    // })
+    // .then((taskUpdated) => {
+
+    io.emit("receive_edit_task")
+
+    // })
+    // .catch(err => console.log(err))
+})
+
+  socket.on("edit_task_state", (taskId, state)=>{
+    
+  //   Card.findByIdAndUpdate(taskId, {    
+  //     stat: state.toUpperCase()
   // })
+  //   .then((cardUpdated) => {
+
+      io.emit("receive_edit_task_state")
+
+    // })
+    // .catch(err => console.log(err))
+
+  })
 
 
+socket.on("delete_task", (taskId)=>{
+  
+  // Card.findByIdAndRemove(taskId)
+  //     .then(() =>
+      io.emit("receive_delete_task")
 
-
+      // )
+      // .catch((error) => console.log(error));
+})
 
 
   //Chat controller
@@ -127,6 +144,8 @@ io.on("connection", (socket) =>{
     await Message.create(fullMessage)
     //Sends changes to all sockets users
     socket.to(fullMessage.chatId).emit("receive_message", fullMessage) //sends the message to all socket room users except the sender
+    io.emit("receive_alert_message") //sends the message to all socket room users except the sender
+
     socket.emit("receive_message", fullMessage) //sends the message to the sender
   })
 
