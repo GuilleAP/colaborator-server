@@ -4,10 +4,8 @@ const express = require("express");
 
 const { isAuthenticated } = require("./middleware/jwt.middleware"); // <== IMPORT
 
-
 const app = express();
 require("./config")(app);
-
 
 // 👇 MIDDLEWARE MISSING
 const allRoutes = require("./routes");
@@ -27,5 +25,8 @@ app.use("/colaborator-API/projects", cardRoutes);
 
 const chatRoutes = require("./routes/chat_routes/chat.routes");
 app.use("/colaborator-API/chat", isAuthenticated, chatRoutes);
+
+const activityRoutes = require("./routes/activity_routes/activity.routes");
+app.use("/colaborator-API/activity", isAuthenticated, activityRoutes);
 
 module.exports = app;

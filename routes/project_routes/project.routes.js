@@ -3,7 +3,7 @@ const Project = require("../../models/Project.model");
 const User = require("../../models/User.model");
 
 const Card = require("../../models/Card.model");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 //  POST /api/projects  -  Creates a new project
 router.post("/", (req, res, next) => {
@@ -11,11 +11,10 @@ router.post("/", (req, res, next) => {
 
   Project.create({ title, description, admin, team, active, tech, cards: [] })
     .then((response) => {
-      res.status(200).json(response)
+      res.status(200).json(response);
     })
     .catch((err) => res.json(err));
-    // User.findBy({_id:{$in: team}})
-
+  // User.findBy({_id:{$in: team}})
 });
 
 router.get("/", (req, res, next) => {
@@ -25,7 +24,6 @@ router.get("/", (req, res, next) => {
     .then((allProjects) => res.status(200).json(allProjects))
     .catch((err) => res.json(err));
 });
-
 
 router.get("/:projectId/team", (req, res, next) => {
   const { projectId } = req.params;
@@ -44,9 +42,6 @@ router.get("/:projectId/team", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-
-
-
 router.get("/:userId/current", (req, res, next) => {
   const { userId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -54,7 +49,7 @@ router.get("/:userId/current", (req, res, next) => {
     return;
   }
 
-  Project.find({active:true, team:userId })
+  Project.find({ active: true, team: userId })
     .populate("cards")
     .populate("team")
     .then((allProjects) => res.status(200).json(allProjects))
@@ -68,7 +63,7 @@ router.get("/:userId/completed", (req, res, next) => {
     return;
   }
 
-  Project.find({active:false, team:userId })
+  Project.find({ active: false, team: userId })
     .populate("cards")
     .populate("team")
     .then((allProjects) => res.status(200).json(allProjects))
@@ -92,7 +87,7 @@ router.get("/:projectId", (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
-// PUT  /api/projects/:projectId  -  Updates a specific project by id 
+// PUT  /api/projects/:projectId  -  Updates a specific project by id
 router.put("/:projectId", (req, res, next) => {
   const { projectId } = req.params;
 
