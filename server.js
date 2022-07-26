@@ -84,14 +84,15 @@ io.on("connection", (socket) =>{
   socket.on("new_task", (projectId, newTask)=>{
     console.log("BODY: ", newTask )
 
-    const {title, description, color, stat} = newTask;
+    const {title, description, color, stat, limitDate} = newTask;
 
     Card.create({
         title: title, 
         description: description, 
         stat: stat,
         project: projectId,
-        color: color
+        color: color,
+        limitDate: limitDate
     })
     .then((newCardResponse) => {
       io.emit("receive_new_task", newTask)
