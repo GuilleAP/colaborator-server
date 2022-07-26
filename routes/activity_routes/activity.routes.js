@@ -12,10 +12,6 @@ router.get("/", (req, res, next) => {
     .populate("project")
     .populate("user")
     .then((response) => {
-      console.log(
-        "🚀 ~ file: activity.routes.js ~ line 15 ~ .then ~ response",
-        response
-      );
       res.status(200).json(response);
     })
     .catch((error) => res.json(error));
