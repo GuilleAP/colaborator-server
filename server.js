@@ -44,6 +44,7 @@ io.on("connection", (socket) => {
   socket.on("render_tasks", () => {
     io.emit("receive_render_tasks");
     io.emit("receive_render_activity");
+    io.emit("receive_render_calendar")
   });
 
 
