@@ -56,6 +56,20 @@ router.get("/:userId/current", (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+
+router.get("/:userId/current/id", (req, res, next) => {
+  const { userId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400).json({ message: "Specified id is not valid" });
+    return;
+  }
+
+  Project.find({ active: true, team: userId })
+    .select('_id')
+    .then((allProjectsId) => res.status(200).json(allProjectsId))
+    .catch((err) => res.json(err));
+});
+
 router.get("/:userId/completed", (req, res, next) => {
   const { userId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(userId)) {
