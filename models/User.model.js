@@ -19,6 +19,11 @@ const userSchema = new Schema({
         required: true 
     },
 
+    role: {
+        type: String,
+        required: true
+    }
+
     // projects: [{ type: Schema.Types.ObjectId, ref: "Project" }] 
 });
 
