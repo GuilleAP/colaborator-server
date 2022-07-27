@@ -84,12 +84,13 @@ router.get('/card/edit/:id', (req, res) => {
 
 router.put('/card/updateCard/:id', (req, res) => {
 
-    const { title, description, color } = req.body;
+    const { title, description, color, limitDate } = req.body;
 
     Card.findByIdAndUpdate(req.params.id, {    
         title: title,
         description: description,
-        color: color
+        color: color,
+        limitDate: limitDate
     })
     .then((cardUpdated) => {
 
