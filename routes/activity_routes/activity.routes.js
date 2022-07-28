@@ -3,11 +3,6 @@ const Activity = require("../../models/Activity.model");
 const mongoose = require("mongoose");
 
 router.get("/", (req, res, next) => {
-  console.log(
-    "🚀 ~ file: activity.routes.js ~ line 7 ~ router.get ~ req.query",
-    req.query.currentProjects
-  );
-
   Activity.find({ project: { $in: req.query.currentProjects } })
     .populate("project")
     .populate("user")

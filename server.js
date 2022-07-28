@@ -16,8 +16,11 @@ const Message = require("./models/Message.model");
 
 //cors
 const io = new Server(myServer, {
+
   cors: {
-    origin: process.env.ORIGIN || "http://localhost:3000",
+    // origin: process.env.ORIGIN || "http://localhost:3000",
+    origin: "*",
+
   },
 });
 
