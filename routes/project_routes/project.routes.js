@@ -14,7 +14,6 @@ router.post("/", (req, res, next) => {
       res.status(200).json(response);
     })
     .catch((err) => res.json(err));
-  // User.findBy({_id:{$in: team}})
 });
 
 router.get("/", (req, res, next) => {

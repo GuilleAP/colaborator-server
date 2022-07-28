@@ -1,20 +1,11 @@
-### Instructions
+### Instructionss
 
 #### Instala dependencias
-- npm i
-#### Crea archivo .env y agrega variables de entorno
-![.env](https://user-images.githubusercontent.com/14861253/170860925-8da6984f-791a-4f9a-8747-d7e4a4917310.png)
-- crea un archivo .env en la raíz del proyecto con las siguientes variables de entorno: <br>
-  - TOKEN_SECRET = super-secret-password <br>
-  - MONGODB_URI = "ruta de la base de datos" -> opcional, mirad /project3-back/db/index.js para entenderlo<br>
-  (si tiene MONGODB_URI aceptará esta, sino || aceptará "mongodb://localhost...") <br>
-  ![MONGODB_URI](https://user-images.githubusercontent.com/14861253/170861097-88a6dc84-ed25-4290-9057-e5d3215aa461.png)
-#### Cambiar el nombre de la base de datos antes de la creación de esta
-- cambiar la línia en /project3-back/db/index.js por el nombre de la base de datos que queráis<br>
-  - "mongodb://localhost/project-management-server"; //siendo project-management-server el nombre de la base de datos que os creará una vez ejecutéis npm start, así que si queréis una web de películas, poned "project-movies-server" o si tenéis un nombre estilo "netflix" pensado, agregarlo aquí antes del npm start.
-  - OJO!, esto ha de ser antes de lanzar el siguiente paso
+- npm i --force
+
 #### Lanza el backend
-- npm start
+- npm start (Lanzamiento normal)
+- npm run dev (Lanzamiento con Nodemon)
 
 #### Agregar archivo .env con:
 - TOKEN_SECRET = super-secret-password
@@ -26,33 +17,43 @@
 
 We will start our project by first documenting all of the routes and data models for our API. Following best practices we will use _verbs_ to specify the type of operation being done and _nouns_ when naming endpoints.
 
-#### Routes
+
+### Routes
 
 ##### Project routes
 
-| HTTP verb | URL                        | Request body | Action                        |
-| --------- | -------------------------- | ------------ | ----------------------------- |
-| GET       | `/api/projects`            | (empty)      | Returns all the projects      |
-| POST      | `/api/projects`            | JSON         | Adds a new project            |
-| GET       | `/api/projects/:projectId` | (empty)      | Returns the specified project |
-| DELETE    | `/api/projects/:projectId` | (empty)      | Deletes the specified project |
+| HTTP verb | URL                                              | Action                        |
+| --------- | ------------------------------------------------ | ----------------------------- |
+| GET       | `/colaborator-API/projects`                      | Gets all the projects         |
+| POST      | `/colaborator-API/projects`                      | Adds a new project            |
+| PUT       | `/colaborator-API/projects/:projectId`           | Updates a specific project    |
+| DELETE    | `/colaborator-API/projects/:projectId`           | Deletes a specified project   |
 
 ##### Task routes
 
-| HTTP verb | URL                  | Request body | Action                     |
-| --------- | -------------------- | ------------ | -------------------------- |
-| POST      | `/api/tasks`         | JSON         | Adds a new task            |
-| GET       | `/api/tasks/:taskId` | (empty)      | Returns the specified task |
-| PUT       | `/api/tasks/:taskId` | JSON         | Edits the specified task   |
-| DELETE    | `/api/tasks/:taskId` | (empty)      | Deletes the specified task |
+| HTTP verb | URL                                                    | Action                     |
+| --------- | ------------------------------------------------------ | -------------------------- |
+| GET       | `/colaborator-API/projects/card/get-cards`             | Gets all the Tasks         |
+| POST      | `/colaborator-API/projects/:projectId/card/new-card`   | Create a new Task          |
+| PUT       | `/colaborator-API/projects/card/updateCard/:id/:stat`  | Edits the specified task   |
+| DELETE    | `/colaborator-API/projects/card/delete/:id`            | Deletes the specified task |
+
+##### Chat routes
+
+| HTTP verb | URL                                                    | Action                                |
+| --------- | ------------------------------------------------------ | --------------------------            |
+| POST      | `/colaborator-API/chat/start/direct-chat/:userId`      | Creates a chat for a specific User    |
+| POST      | `/colaborator-API/chat/start/project-chat/:projectId`  | Creates a chat for a specific Project |
+| POST      | `/colaborator-API/chat/start/:userId`                  | Creates a chat                        |
+| GET       | `/colaborator-API/chat/messages/:chatId`               | Gets the chats                        |
 
 ##### Auth routes
 
-| HTTP verb | URL            | Request Headers                 | Request Body              |
-| --------- | -------------- | ------------------------------- | ------------------------- |
-| POST      | `/auth/signup` | --                              | { email, password, name } |
-| POST      | `/auth/login`  | --                              | { email, password }       |
-| GET       | `/auth/verify` | Authorization: Bearer \< JWT \> | --                        |
+| HTTP verb | URL                                                    | Action                                |
+| --------- | ------------------------------------------------------ | --------------------------            |
+| POST      | `/colaborator-API/auth/signup`                         | SignUp User                           |
+| POST      | `/colaborator-API/auth/login`                          | Login User                            |
+| GET       | `/colaborator-API/auth/verify`                         | User verification                     |
 
 
 
@@ -60,33 +61,130 @@ We will start our project by first documenting all of the routes and data models
 
 #### Models
 
-##### Project Model
+##### Activity Model
 
 ```js
-{
-  title: String,
-  description: String,
-  tasks: [ { type: Schema.Types.ObjectId, ref: 'Task' } ]
-}
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
+
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  }
 ```
 
 ##### Task Model
 
 ```js
-{
-  title: String,
-  description: String,
-  project: { type: Schema.Types.ObjectId, ref: 'Project' }
-}
+  {
+    title: {
+        type: String,
+        required: true
+    },
+
+    description: {
+        type: String
+    },
+
+    stat: {
+        type: String,
+        enum: ['TODO', 'PROGRESS', 'DONE']
+    },
+
+    color: {
+        type: String,
+        enum:['white', 'blue', 'red', 'yellow', 'gray', 'orange', 'green']
+    },
+
+    limitDate: {
+        type: String
+    },
+
+    project: { type: Schema.Types.ObjectId, ref: "Project" }  
+  }
 ```
 
-##### User Model
+##### Chat Model
 
 ```js
-{
-  email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  name: { type: String, required: true },
-}
+  {
+    participants: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  }
+```
+
+##### Message Model
+
+```js
+  {
+    sender: { type: Schema.Types.ObjectId, ref: "User" },
+    text: String,
+    chatId: { type: Schema.Types.ObjectId, ref: "Chat" },
+  }
+```
+
+##### Project Model
+
+```js
+  {
+    title: {
+      type: String,
+      required: true
+    },
+    active: {
+      type: Boolean,
+      default: false
+    },
+
+    description: String,
+
+    tech: String,
+
+    endAt: Date,
+
+    admin:{ type: Schema.Types.ObjectId, ref: "User" },
+
+    team: [{ type: Schema.Types.ObjectId, ref: "User" }],
+
+    cards: [{ type: Schema.Types.ObjectId, ref: "Card" }]
+  }
+```
+
+#### User Model
+
+  ```js
+  {
+
+      email: { 
+          type: String, 
+          unique: true, 
+          required: true 
+      },
+
+      password: { 
+          type: String, 
+          required: true 
+      },
+      
+      name: { 
+          type: String, 
+          required: true 
+      },
+
+      role: {
+          type: String,
+          required: true
+      }
+  }
 ```
 
