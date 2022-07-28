@@ -1,4 +1,4 @@
-### Instructionss
+### Instructiones
 
 #### Instala dependencias
 - npm i --force
@@ -17,6 +17,29 @@
 
 We will start our project by first documenting all of the routes and data models for our API. Following best practices we will use _verbs_ to specify the type of operation being done and _nouns_ when naming endpoints.
 
+<br>
+
+# Client / Frontend
+
+### Routes
+
+| Path                                 | Component                      | Permisions       | Behavior                |
+| -------------------------------------| -------------------------------| ---------------- | ----------------------- |
+| '/'                                  | `HomePage`                     | `<AnonRoute>`    | Home Page               |
+| '/signup'                            | `SignupPage`                   | `<AnonRoute>`    | Sign Up Page            |
+| '/login'                             | `LoginPage`                    | `<AnonRoute>`    | Login Page              |
+| '/projects'                          | `ProjectsPage`                 | `<AnonRoute>`    | Projects Page           |
+| '/chat'                              | `ChatPage`                     | `<PrivateRoute>` | General Chat Page       |
+| '/project/:projectId/chat'           | `ChatPageWBar`                 | `<PrivateRoute>` | Project Chat Page       |
+| '/project/:projectId'                | `ProjectDetailsPage`           | `<PrivateRoute>` | Project Info Page       |
+| '/project/:projectId/tasks'          | `ProjectCards`                 | `<PrivateRoute>` | Project Task Page       |
+| '/project/:projectId/monthCalendar'  | `CalendarPage`                 | `<PrivateRoute>` | Project Calendar Page   |
+| '/*'                                 | `ErrorPage`                    | `<Route>`        | Error Page              |
+
+
+<br>
+
+# Server / Backend
 
 ### Routes
 
@@ -49,13 +72,13 @@ We will start our project by first documenting all of the routes and data models
 
 ##### Auth routes
 
-| HTTP verb | URL                                                    | Action                                |
-| --------- | ------------------------------------------------------ | --------------------------            |
-| POST      | `/colaborator-API/auth/signup`                         | SignUp User                           |
-| POST      | `/colaborator-API/auth/login`                          | Login User                            |
-| GET       | `/colaborator-API/auth/verify`                         | User verification                     |
+| HTTP verb | URL                                                    | Action                     |
+| --------- | ------------------------------------------------------ | -------------------------- |
+| POST      | `/colaborator-API/auth/signup`                         | SignUp User                |
+| POST      | `/colaborator-API/auth/login`                          | Login User                 |
+| GET       | `/colaborator-API/auth/verify`                         | User verification          |
 
-
+<br>
 
 <hr>
 
