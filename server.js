@@ -36,6 +36,14 @@ io.use(
 io.on("connection", (socket) => {
   const user = socket.decoded_token;
   console.log("User connecting: " + user.name);
+  const count = io.engine.clientsCount;
+  console.log("🚀 ~ file: server.js ~ line 41 ~ io.on ~ Number of clients connected:", count)
+
+  socket.on("socket_dcn", () => {
+    console.log("Socket disconnected")
+    socket.disconnect(true)
+  });
+
 
   //Projects controller
   socket.on("render_projects", () => {
