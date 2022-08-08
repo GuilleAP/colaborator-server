@@ -1,6 +1,5 @@
 const router = require("express").Router();
 const Chat = require("../models/Chat.model");
-const Message = require("../models/Message.model");
 const mongoose = require("mongoose");
 const chatController = require("../controllers/chat.controller");
 
