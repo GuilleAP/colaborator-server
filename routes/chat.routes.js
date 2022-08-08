@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const Chat = require("../../models/Chat.model");
-const Message = require("../../models/Message.model");
+const Chat = require("../models/Chat.model");
+const Message = require("../models/Message.model");
 const mongoose = require("mongoose");
 
 router.post("/start/direct-chat/:userId", (req, res, next) => {

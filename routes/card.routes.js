@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const mongoose = require('mongoose');
 
-const Card = require("../../models/Card.model");
+const Card = require("../models/Card.model");
 
 /**
  * Ruta para recuperar todas las targetas de un poroyecto

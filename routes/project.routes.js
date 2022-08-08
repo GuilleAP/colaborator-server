@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const Project = require("../../models/Project.model");
-const User = require("../../models/User.model");
+const Project = require("../models/Project.model");
+const User = require("../models/User.model");
 
-const Card = require("../../models/Card.model");
+const Card = require("../models/Card.model");
 const mongoose = require("mongoose");
 
 //  POST /api/projects  -  Creates a new project

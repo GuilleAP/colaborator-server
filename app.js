@@ -11,22 +11,22 @@ require("./config")(app);
 const allRoutes = require("./routes");
 app.use("/colaborator-API", allRoutes);
 
-const authRouter = require("./routes/user_routes/auth.routes");
+const authRouter = require("./routes/auth.routes");
 app.use("/colaborator-API/auth", authRouter);
 
-const userRouter = require("./routes/user_routes/user.routes");
+const userRouter = require("./routes/user.routes");
 app.use("/colaborator-API/users", userRouter);
 
-const projectRoutes = require("./routes/project_routes/project.routes");
-app.use("/colaborator-API/projects", projectRoutes);
+const projectRoutes = require("./routes/project.routes");
+app.use("/colaborator-API/projects",isAuthenticated, projectRoutes);
 
-const cardRoutes = require("./routes/project_routes/card.routes");
-app.use("/colaborator-API/projects", cardRoutes);
+const cardRoutes = require("./routes/card.routes");
+app.use("/colaborator-API/projects",isAuthenticated, cardRoutes);
 
-const chatRoutes = require("./routes/chat_routes/chat.routes");
+const chatRoutes = require("./routes/chat.routes");
 app.use("/colaborator-API/chat", isAuthenticated, chatRoutes);
 
-const activityRoutes = require("./routes/activity_routes/activity.routes");
+const activityRoutes = require("./routes/activity.routes");
 app.use("/colaborator-API/activity", isAuthenticated, activityRoutes);
 
 module.exports = app;
