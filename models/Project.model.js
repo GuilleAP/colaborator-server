@@ -30,8 +30,8 @@ const projectSchema = new Schema(
   }
 );
 
-// //Quan tinguem usuaris, descomentar per fer que la combinació titol+usuari sigui única
-// projectSchema.index({ title: 1, user: 1}, { unique: true });
+// Combination project title + team must be unique
+projectSchema.index({ title: 1, team: 1}, { unique: true });
 
 const Project = model("Project", projectSchema);
 
