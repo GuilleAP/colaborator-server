@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
-const activityController = require('../controllers/activity.controller')
+const activityController = require('../controllers/rest_api/activity.controller')
 
 router.get("/", activityController.get)
 

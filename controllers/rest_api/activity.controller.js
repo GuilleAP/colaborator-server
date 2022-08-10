@@ -1,4 +1,4 @@
-const Activity = require("../models/Activity.model");
+const Activity = require("../../models/Activity.model");
 
 module.exports = {
   get: (req, res) => {

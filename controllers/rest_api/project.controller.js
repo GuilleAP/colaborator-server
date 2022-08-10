@@ -1,4 +1,4 @@
-const Project = require("../models/Project.model");
+const Project = require("../../models/Project.model");
 const mongoose = require("mongoose");
 
 module.exports = {
@@ -6,31 +6,19 @@ module.exports = {
     Project.find()
       .populate("cards")
       .populate("team")
-      .then((allProjects) => res.status(200).json(allProjects))
+      .then((allProjects) => {
+        res.status(200).json(allProjects);
+      })
       .catch((err) => res.json(err));
   },
 
   postNewProject: (req, res) => {
     const { title, description, admin, team, active, tech } = req.body;
-    console.log("🚀 ~ file: project.controller.js ~ line 16 ~ team", team);
-    if (title === "" || !team.length) {
-      res.status(400).json({ message: "Provide a project title and a team" });
-      return;
-    }
     Project.create({ title, description, admin, team, active, tech, cards: [] })
       .then((response) => {
         res.status(200).json(response);
       })
-      .catch((err) => {
-        if (err.name === "MongoError" && err.code === 11000) {
-          
-          // Duplicate username
-          return res
-            .status(400)
-            .send({message: "User already exist!" });
-        }
-        res.json(err);
-      });
+      .catch((err) => res.json(err));
   },
 
   getProjectTeam: (req, res) => {
@@ -57,7 +45,9 @@ module.exports = {
     Project.find({ active: true, team: userId })
       .populate("cards")
       .populate("team")
-      .then((allProjects) => res.status(200).json(allProjects))
+      .then((allProjects) => {
+        res.status(200).json(allProjects)
+      })
       .catch((err) => res.json(err));
   },
 

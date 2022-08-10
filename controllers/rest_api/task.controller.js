@@ -1,4 +1,4 @@
-const Task = require("../models/Card.model");
+const Task = require("../../models/Card.model");
 const mongoose = require("mongoose");
 
 module.exports = {

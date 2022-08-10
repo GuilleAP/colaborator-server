@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const projectController = require("../controllers/project.controller");
+const projectController = require("../controllers/rest_api/project.controller");
 
 // GET /colaborator-API/projects/ - Gets all the projects
 router.get("/", projectController.getAllProjects);

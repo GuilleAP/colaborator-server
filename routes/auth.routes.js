@@ -1,5 +1,5 @@
 const express = require('express');
-const authController = require('../controllers/auth.controller')
+const authController = require('../controllers/rest_api/auth.controller')
 
 const { isAuthenticated } = require('../middleware/jwt.middleware.js');
 

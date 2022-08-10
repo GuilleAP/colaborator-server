@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Chat = require("../models/Chat.model");
 const mongoose = require("mongoose");
-const chatController = require("../controllers/chat.controller");
+const chatController = require("../controllers/rest_api/chat.controller");
 
 router.post("/start/direct-chat/:userId", chatController.postDirectChat);
 

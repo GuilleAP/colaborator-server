@@ -1,5 +1,5 @@
-const Chat = require("../models/Chat.model");
-const Message = require("../models/Message.model");
+const Chat = require("../../models/Chat.model");
+const Message = require("../../models/Message.model");
 
 module.exports = {
   getChat: (req, res) => {
