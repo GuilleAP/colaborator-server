@@ -1,5 +1,10 @@
 const socketioJwt = require("socketio-jwt");
-const Message = require("../models/Message.model")
+const Message = require("../models/Message.model");
+const {
+  joinAllProjectsRoom,
+  newProject,
+  getCurrentProjectsByUser
+} = require("../controllers/wesocket_api/project.controller");
 
 module.exports = (io) => {
   //token auth
@@ -19,6 +24,12 @@ module.exports = (io) => {
       "🚀 ~ file: server.js ~ line 41 ~ io.on ~ Number of clients connected:",
       count
     );
+
+    socket.on("currentProjects", () => getCurrentProjectsByUser(socket, user));
+
+    socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
+    socket.on("newProject", (projectBody) => newProject(socket, projectBody, user));
+
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
