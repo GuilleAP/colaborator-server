@@ -6,6 +6,9 @@ const {
   getCurrentProjectsByUser
 } = require("../controllers/wesocket_api/project.controller");
 
+
+let usersSocket = [];
+
 module.exports = (io) => {
   //token auth
   io.use(
@@ -24,6 +27,11 @@ module.exports = (io) => {
       "🚀 ~ file: server.js ~ line 41 ~ io.on ~ Number of clients connected:",
       count
     );
+      var userSocketInfo = new Object();
+      userSocketInfo.userId         = user._id;
+      userSocketInfo.socketId     = socket.id;
+      usersSocket.push(userSocketInfo);
+      console.log("🚀 ~ file: index.js ~ line 35 ~ io.on ~ usersSocket", usersSocket)
 
     socket.on("currentProjects", () => getCurrentProjectsByUser(socket, user));
 
