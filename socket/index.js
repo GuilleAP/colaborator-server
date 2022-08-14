@@ -7,7 +7,7 @@ const {
   joinProjectRoom
 } = require("../controllers/wesocket_api/project.controller");
 
-let usersSocket = [];
+let totalUserSocket = [];
 
 module.exports = (io) => {
   //token auth
@@ -33,20 +33,20 @@ module.exports = (io) => {
     let userSocketInfo = new Object();
     userSocketInfo.userId = user._id;
     userSocketInfo.socketId = socket.id;
-    usersSocket.push(userSocketInfo);
-    console.log("🚀 ~ file: index.js ~ line 37 ~ io.on ~ usersSocket", usersSocket)
+    totalUserSocket.push(userSocketInfo);
+    console.log("🚀 ~ file: index.js ~ line 37 ~ io.on ~ usersSocket", totalUserSocket)
 
     socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user));
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
     socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, roomId, user));
 
     socket.on("newProject", (projectBody) =>
-      newProject(socket, io, projectBody, user, usersSocket)
+      newProject(socket, io, projectBody, user, totalUserSocket)
     );
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
-      usersSocket = usersSocket.filter( el => el.userId !== user._id );
+      totalUserSocket = totalUserSocket.filter( el => el.userId !== user._id );
       socket.disconnect(true);
     });
 

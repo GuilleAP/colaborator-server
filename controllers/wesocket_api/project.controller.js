@@ -13,7 +13,7 @@ const getCurrentProjectsByUser = (socket, userId) => {
     });
 };
 
-const newProject = (socket, io, projectBody, user, usersSocket) => {
+const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   const { title, description, admin, team, active, tech } = projectBody;
   console.log(
     "🚀 ~ file: project.controller.js ~ line 20 ~ newProject ~ title",
@@ -27,7 +27,7 @@ const newProject = (socket, io, projectBody, user, usersSocket) => {
     .then((project) => {
       // socket.emit('newProjectCreated', project)
       project.team.map((member) => {
-        usersSocket.map((user) => {
+        totalUserSocket.map((user) => {
           if (member == user.userId) {
             io.to(user.socketId).emit("newProjectCreated", project);
           }
