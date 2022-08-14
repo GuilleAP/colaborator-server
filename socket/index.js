@@ -23,6 +23,7 @@ module.exports = (io) => {
     const user = socket.decoded_token;
     console.log("User connecting: " + user.name);
     const count = io.engine.clientsCount;
+
     console.log(
       "🚀 ~ file: server.js ~ line 41 ~ io.on ~ Number of clients connected:",
       count
@@ -33,6 +34,7 @@ module.exports = (io) => {
     userSocketInfo.userId = user._id;
     userSocketInfo.socketId = socket.id;
     usersSocket.push(userSocketInfo);
+    console.log("🚀 ~ file: index.js ~ line 37 ~ io.on ~ usersSocket", usersSocket)
 
     socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user));
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
@@ -44,6 +46,7 @@ module.exports = (io) => {
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
+      usersSocket = usersSocket.filter( el => el.userId !== user._id );
       socket.disconnect(true);
     });
 
