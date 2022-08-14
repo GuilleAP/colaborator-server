@@ -34,7 +34,7 @@ module.exports = (io) => {
     userSocketInfo.socketId = socket.id;
     usersSocket.push(userSocketInfo);
 
-    socket.on("currentProjects", () => getCurrentProjectsByUser(socket, user));
+    socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user));
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
     socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, roomId, user));
 

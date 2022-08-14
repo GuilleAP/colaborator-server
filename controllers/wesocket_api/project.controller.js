@@ -6,10 +6,10 @@ const getCurrentProjectsByUser = (socket, userId) => {
     .populate("cards")
     .populate("team")
     .then((allCurrentProjects) => {
-      socket.emit("fetchCurrentProjects", allCurrentProjects);
+      socket.emit("getCurrentProjects", allCurrentProjects);
     })
     .catch((err) => {
-      socket.emit("fetchCurrentProjectsError", err);
+      socket.emit("getCurrentProjects", err);
     });
 };
 
