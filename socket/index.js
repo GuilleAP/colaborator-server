@@ -3,9 +3,8 @@ const Message = require("../models/Message.model");
 const {
   joinAllProjectsRoom,
   newProject,
-  getCurrentProjectsByUser
+  getCurrentProjectsByUser,
 } = require("../controllers/wesocket_api/project.controller");
-
 
 let usersSocket = [];
 
@@ -27,17 +26,18 @@ module.exports = (io) => {
       "🚀 ~ file: server.js ~ line 41 ~ io.on ~ Number of clients connected:",
       count
     );
-      var userSocketInfo = new Object();
-      userSocketInfo.userId         = user._id;
-      userSocketInfo.socketId     = socket.id;
-      usersSocket.push(userSocketInfo);
-      console.log("🚀 ~ file: index.js ~ line 35 ~ io.on ~ usersSocket", usersSocket)
+
+    //Store user and it's socket
+    let userSocketInfo = new Object();
+    userSocketInfo.userId = user._id;
+    userSocketInfo.socketId = socket.id;
+    usersSocket.push(userSocketInfo);
 
     socket.on("currentProjects", () => getCurrentProjectsByUser(socket, user));
-
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
-    socket.on("newProject", (projectBody) => newProject(socket, projectBody, user));
-
+    socket.on("newProject", (projectBody) =>
+      newProject(socket, io, projectBody, user, usersSocket)
+    );
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
