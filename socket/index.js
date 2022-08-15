@@ -4,7 +4,9 @@ const {
   joinAllProjectsRoom,
   newProject,
   getCurrentProjectsByUser,
-  joinProjectRoom
+  joinProjectRoom,
+  updateProject,
+  
 } = require("../controllers/wesocket_api/project.controller");
 
 let totalUserSocket = [];
@@ -34,11 +36,12 @@ module.exports = (io) => {
     userSocketInfo.userId = user._id;
     userSocketInfo.socketId = socket.id;
     totalUserSocket.push(userSocketInfo);
-    console.log("🚀 ~ file: index.js ~ line 37 ~ io.on ~ usersSocket", totalUserSocket)
 
-    socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user));
+    socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user._id));
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
     socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, roomId, user));
+    socket.on("updateProject", (projectBody) => updateProject(socket, io, projectBody));
+
 
     socket.on("newProject", (projectBody) =>
       newProject(socket, io, projectBody, user, totalUserSocket)

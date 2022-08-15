@@ -33,8 +33,6 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
           }
         });
       });
-      // joinProjectRoom(socket, project._id, user)
-      // getCurrentProjectsByUser(socket, user._id)
     })
 
     .catch((err) => console.log(err));
@@ -56,9 +54,39 @@ const joinAllProjectsRoom = (socket, user) => {
     .catch((err) => console.log(err));
 };
 
+const updateProject = (socket, io, projectBody) => {
+  // if (!mongoose.Types.ObjectId.isValid(projectId)) {
+  //   res.status(400).json({ message: "Specified id is not valid" });
+  //   return;
+  // }
+
+  Project.findByIdAndUpdate(projectBody.projectId, projectBody.team, { new: true })
+    .populate("team")
+    .then((updatedProject) => {
+      socket.to(updatedProject._id).emit("projectUpdated", updatedProject);//sends the message to all socket room users except the sender
+      socket.emit("projectUpdated", updatedProject);
+      // io.sockets.in(updatedProject._id).emit("projectUpdated", updatedProject);
+    })
+    .catch((error) => res.json(error));
+};
+
+const deleteProject = (io, user) => {
+  const { projectId } = req.params;
+
+  // if (!mongoose.Types.ObjectId.isValid(projectId)) {
+  //   res.status(400).json({ message: "Specified id is not valid" });
+  //   return;
+  // }
+
+  Project.findByIdAndRemove(projectId)
+    .then(() => io.in("projectId").emit("projectDeleted"))
+    .catch((error) => res.json(error));
+};
+
 module.exports = {
   getCurrentProjectsByUser,
   newProject,
   joinProjectRoom,
   joinAllProjectsRoom,
+  updateProject
 };

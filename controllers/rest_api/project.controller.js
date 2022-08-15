@@ -14,7 +14,6 @@ module.exports = {
 
   postNewProject: (req, res) => {
     const { title, description, admin, team, active, tech } = req.body;
-    console.log("🚀 ~ file: project.controller.js ~ line 16 ~ team", team);
     if (title === "" || !team.length) {
       res.status(400).json({ message: "Provide a project title and a team" });
       return;
