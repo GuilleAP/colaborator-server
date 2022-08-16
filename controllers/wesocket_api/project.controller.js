@@ -25,22 +25,11 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   // }
   Project.create({ title, description, admin, team, active, tech, cards: [] })
     .then((project) => {
-      // socket.emit('newProjectCreated', project)
       project.team.forEach((member) => {
         if (totalUserSocket.hasOwnProperty(member._id)) {
-          console.log("MEMBER: ", member._id, " IS CONNECTED");
           io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
-        } else {
-          console.log("MEMBER: ", member._id, " IS NOT CONNECTED");
         }
       });
-      // project.team.map((member) => {
-      //   totalUserSocket.map((user) => {
-      //     if (member == user.userId) {
-      //       io.to(user.socketId).emit("newProjectCreated", project);
-      //     }
-      //   });
-      // });
     })
 
     .catch((err) => console.log(err));
@@ -69,7 +58,7 @@ const joinAllProjectsRoom = (socket, io, user) => {
     .catch((err) => console.log(err));
 };
 
-const updateProject = (socket, io, projectBody) => {
+const updateProject = (io, projectBody, totalUserSocket) => {
   // if (!mongoose.Types.ObjectId.isValid(projectId)) {
   //   res.status(400).json({ message: "Specified id is not valid" });
   //   return;
@@ -80,29 +69,47 @@ const updateProject = (socket, io, projectBody) => {
   })
     .populate("team")
     .then((updatedProject) => {
-      io.to(updatedProject._id.toString()).emit(
-        "projectUpdated",
+      console.log(
+        "🚀 ~ file: project.controller.js ~ line 73 ~ .then ~ updatedProject",
         updatedProject
-      ); //sends the message to all socket room users except the sender
-      // socket.emit("projectUpdated", updatedProject);
-      // io.sockets.in(updatedProject._id).emit("projectUpdated", updatedProject);
+      );
+      updatedProject.team.forEach((member) => {
+        if (totalUserSocket.hasOwnProperty(member._id)) {
+          io.to(totalUserSocket[member._id]).emit(
+            "newProjectCreated",
+            updatedProject
+          );
+        }
+      });
+
+      // io.to(updatedProject._id.toString()).emit(
+      //   "projectUpdated",
+      //   updatedProject
+      // );
     })
-    .catch((error) => res.json(error));
+    .catch((err) => console.log(err));
 };
 
-const deleteProject = (io, projectId) => {
+const deleteProject = (io, projectId, totalUserSocket) => {
   // if (!mongoose.Types.ObjectId.isValid(projectId)) {
   //   res.status(400).json({ message: "Specified id is not valid" });
   //   return;
   // }
 
   Project.findByIdAndRemove(projectId)
-  console.log("🚀 ~ file: project.controller.js ~ line 100 ~ deleteProject ~ projectId", projectId)
-  Project.findByIdAndRemove(projectId)
-    .then(() => {
-      io.to(projectId).emit("projectDeleted", projectId);
+    .then((deletedProject) => {
+      deletedProject.team.forEach((member) => {
+        if (totalUserSocket.hasOwnProperty(member._id)) {
+          io.to(totalUserSocket[member._id]).emit(
+            "projectDeleted",
+            deletedProject
+          );
+        }
+      });
+      // console.log("🚀 ~ file: project.controller.js ~ line 104 ~ .then ~ response", response)
+      // io.to(projectId).emit("projectDeleted", projectId);
     })
-    .catch((error) => res.json(error));
+    .catch((err) => console.log(err));
 };
 
 const leaveProjectRoom = (socket, io, roomId, user) => {
