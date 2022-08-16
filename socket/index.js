@@ -9,7 +9,7 @@ const {
   
 } = require("../controllers/wesocket_api/project.controller");
 
-let totalUserSocket = [];
+let totalUserSocket = {};
 
 module.exports = (io) => {
   //token auth
@@ -32,10 +32,11 @@ module.exports = (io) => {
     );
 
     //Store user and it's socket
-    let userSocketInfo = new Object();
-    userSocketInfo.userId = user._id;
-    userSocketInfo.socketId = socket.id;
-    totalUserSocket.push(userSocketInfo);
+    totalUserSocket[user._id] = socket.id
+    // let userSocketInfo = new Object();
+    // userSocketInfo.userId = user._id;
+    // userSocketInfo.socketId = socket.id;
+    // totalUserSocket.push(userSocketInfo);
 
     socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user._id));
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
@@ -49,7 +50,7 @@ module.exports = (io) => {
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
-      totalUserSocket = totalUserSocket.filter( el => el.userId !== user._id );
+      delete totalUserSocket[user._id]
       socket.disconnect(true);
     });
 

@@ -26,13 +26,21 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   Project.create({ title, description, admin, team, active, tech, cards: [] })
     .then((project) => {
       // socket.emit('newProjectCreated', project)
-      project.team.map((member) => {
-        totalUserSocket.map((user) => {
-          if (member == user.userId) {
-            io.to(user.socketId).emit("newProjectCreated", project);
-          }
-        });
-      });
+      project.team.forEach((member) =>{
+        if(totalUserSocket.hasOwnProperty(member._id)){
+          console.log("MEMBER: ", member.name, " IS CONNECTED")
+          io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
+        }else{
+          console.log("MEMBER: ", member.name, " IS NOT CONNECTED")
+        }
+      })
+      // project.team.map((member) => {
+      //   totalUserSocket.map((user) => {
+      //     if (member == user.userId) {
+      //       io.to(user.socketId).emit("newProjectCreated", project);
+      //     }
+      //   });
+      // });
     })
 
     .catch((err) => console.log(err));
@@ -47,8 +55,8 @@ const joinAllProjectsRoom = (socket, user) => {
   Project.find({ active: true, team: user._id })
     .select("_id")
     .then((allProjectsId) => {
-      allProjectsId.map((project) => {
-        joinProjectRoom(socket, project._id, user);
+      allProjectsId.forEach((projectId) => {
+        joinProjectRoom(socket, projectId._id, user);
       });
     })
     .catch((err) => console.log(err));
