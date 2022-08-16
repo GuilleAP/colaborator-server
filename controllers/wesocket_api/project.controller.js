@@ -103,10 +103,18 @@ const deleteProject = (io, user) => {
     .catch((error) => res.json(error));
 };
 
+const leaveProjectRoom = (socket, io, roomId, user) => {
+  socket.leave(roomId); //creates a socket room with chatId and adds the user to it
+  console.log(`user: ${user.name} leaving room: ${roomId}`);
+  // const clients = io.sockets.adapter.rooms.get(roomId);
+  // const numClients = clients ? clients.size : 0;
+};
+
 module.exports = {
   getCurrentProjectsByUser,
   newProject,
   joinProjectRoom,
   joinAllProjectsRoom,
   updateProject,
+  leaveProjectRoom
 };
