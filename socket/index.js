@@ -44,10 +44,10 @@ module.exports = (io) => {
     socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, io, user));
     socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, io, roomId, user));
     socket.on("leaveProjectRoom", (roomId) => leaveProjectRoom(socket, io, roomId, user));
-    socket.on("deleteProject", (projectId) => deleteProject(io, projectId, totalUserSocket));
+    socket.on("deleteProject", (projectId) => deleteProject(io, projectId));
 
 
-    socket.on("updateProject", (projectBody) => updateProject(io, projectBody, totalUserSocket));
+    socket.on("updateProject", (projectBody) => updateProject(socket, io, projectBody));
     
 
     socket.on("newProject", (projectBody) =>
