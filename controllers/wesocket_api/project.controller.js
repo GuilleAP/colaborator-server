@@ -26,14 +26,14 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   Project.create({ title, description, admin, team, active, tech, cards: [] })
     .then((project) => {
       // socket.emit('newProjectCreated', project)
-      project.team.forEach((member) =>{
-        if(totalUserSocket.hasOwnProperty(member._id)){
-          console.log("MEMBER: ", member.name, " IS CONNECTED")
+      project.team.forEach((member) => {
+        if (totalUserSocket.hasOwnProperty(member._id)) {
+          console.log("MEMBER: ", member._id, " IS CONNECTED");
           io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
-        }else{
-          console.log("MEMBER: ", member.name, " IS NOT CONNECTED")
+        } else {
+          console.log("MEMBER: ", member._id, " IS NOT CONNECTED");
         }
-      })
+      });
       // project.team.map((member) => {
       //   totalUserSocket.map((user) => {
       //     if (member == user.userId) {
@@ -46,17 +46,24 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
     .catch((err) => console.log(err));
 };
 
-const joinProjectRoom = (socket, roomId, user) => {
+const joinProjectRoom = (socket, io, roomId, user) => {
   socket.join(roomId); //creates a socket room with chatId and adds the user to it
   console.log(`user: ${user.name} entering room: ${roomId}`);
+  // const clients = io.sockets.adapter.rooms.get(roomId);
+  // const numClients = clients ? clients.size : 0;
+
+  console.log(
+    "🚀 ~ file: project.controller.js ~ line 76 ~ .then ~ clients",
+    io.sockets.adapter.rooms
+  );
 };
 
-const joinAllProjectsRoom = (socket, user) => {
+const joinAllProjectsRoom = (socket, io, user) => {
   Project.find({ active: true, team: user._id })
     .select("_id")
     .then((allProjectsId) => {
       allProjectsId.forEach((projectId) => {
-        joinProjectRoom(socket, projectId._id, user);
+        joinProjectRoom(socket, io, projectId._id.toString(), user);
       });
     })
     .catch((err) => console.log(err));
@@ -68,11 +75,16 @@ const updateProject = (socket, io, projectBody) => {
   //   return;
   // }
 
-  Project.findByIdAndUpdate(projectBody.projectId, projectBody.team, { new: true })
+  Project.findByIdAndUpdate(projectBody.projectId, projectBody, {
+    new: true,
+  })
     .populate("team")
     .then((updatedProject) => {
-      socket.to(updatedProject._id).emit("projectUpdated", updatedProject);//sends the message to all socket room users except the sender
-      socket.emit("projectUpdated", updatedProject);
+      io.to(updatedProject._id.toString()).emit(
+        "projectUpdated",
+        updatedProject
+      ); //sends the message to all socket room users except the sender
+      // socket.emit("projectUpdated", updatedProject);
       // io.sockets.in(updatedProject._id).emit("projectUpdated", updatedProject);
     })
     .catch((error) => res.json(error));
@@ -96,5 +108,5 @@ module.exports = {
   newProject,
   joinProjectRoom,
   joinAllProjectsRoom,
-  updateProject
+  updateProject,
 };

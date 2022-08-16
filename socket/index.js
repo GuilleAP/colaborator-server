@@ -39,8 +39,8 @@ module.exports = (io) => {
     // totalUserSocket.push(userSocketInfo);
 
     socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user._id));
-    socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, user));
-    socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, roomId, user));
+    socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, io, user));
+    socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, io, roomId, user));
     socket.on("updateProject", (projectBody) => updateProject(socket, io, projectBody));
 
 
@@ -71,6 +71,7 @@ module.exports = (io) => {
     socket.once("join_chat", (chatId) => {
       socket.join(chatId); //creates a socket room with chatId and adds the user to it
       console.log(`user: ${user.name} entering room: ${chatId}`);
+
     });
 
     socket.on("send_message", async (messageObj) => {
