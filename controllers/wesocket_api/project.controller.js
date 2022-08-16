@@ -90,16 +90,18 @@ const updateProject = (socket, io, projectBody) => {
     .catch((error) => res.json(error));
 };
 
-const deleteProject = (io, user) => {
-  const { projectId } = req.params;
-
+const deleteProject = (io, projectId) => {
   // if (!mongoose.Types.ObjectId.isValid(projectId)) {
   //   res.status(400).json({ message: "Specified id is not valid" });
   //   return;
   // }
 
   Project.findByIdAndRemove(projectId)
-    .then(() => io.in("projectId").emit("projectDeleted"))
+  console.log("🚀 ~ file: project.controller.js ~ line 100 ~ deleteProject ~ projectId", projectId)
+  Project.findByIdAndRemove(projectId)
+    .then(() => {
+      io.to(projectId).emit("projectDeleted", projectId);
+    })
     .catch((error) => res.json(error));
 };
 
@@ -116,5 +118,6 @@ module.exports = {
   joinProjectRoom,
   joinAllProjectsRoom,
   updateProject,
-  leaveProjectRoom
+  leaveProjectRoom,
+  deleteProject,
 };
