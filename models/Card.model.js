@@ -30,5 +30,7 @@ const cardSchema = new Schema(
 
     }
 );
+// cardSchema.index({ title: 1, project: 1}, { unique: true });
+
  
 module.exports = model('Card', cardSchema);

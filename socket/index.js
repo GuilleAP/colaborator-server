@@ -7,9 +7,15 @@ const {
   joinProjectRoom,
   leaveProjectRoom,
   updateProject,
-  deleteProject
+  deleteProject,
   
 } = require("../controllers/wesocket_api/project.controller");
+
+
+const {
+  getTasksByProject,
+  newTask
+} = require ("../controllers/wesocket_api/task.controller")
 
 let totalUserSocket = {};
 
@@ -45,14 +51,16 @@ module.exports = (io) => {
     socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, io, roomId, user));
     socket.on("leaveProjectRoom", (roomId) => leaveProjectRoom(socket, io, roomId, user));
     socket.on("deleteProject", (projectId) => deleteProject(io, projectId));
-
-
     socket.on("updateProject", (projectBody) => updateProject(socket, io, projectBody));
-    
-
-    socket.on("newProject", (projectBody) =>
+        socket.on("newProject", (projectBody) =>
       newProject(socket, io, projectBody, user, totalUserSocket)
     );
+
+    socket.on("getTasksByProject", (projectId) => getTasksByProject(socket, projectId));
+    socket.on("newTask", (taskBody) => newTask(socket, io, taskBody));
+    
+
+
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
