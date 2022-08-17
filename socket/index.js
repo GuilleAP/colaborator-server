@@ -23,6 +23,9 @@ const {
   newActivity,
 } = require("../controllers/wesocket_api/activity.controller");
 
+const {
+  getEvents,
+} = require("../controllers/wesocket_api/calendar.controller");
 let totalUserSocket = {};
 
 module.exports = (io) => {
@@ -52,6 +55,7 @@ module.exports = (io) => {
     // userSocketInfo.socketId = socket.id;
     // totalUserSocket.push(userSocketInfo);
 
+    //Project events listeners
     socket.on("getCurrentProjects", () =>
       getCurrentProjectsByUser(socket, user._id)
     );
@@ -72,6 +76,7 @@ module.exports = (io) => {
       newProject(socket, io, projectBody, user, totalUserSocket)
     );
 
+    //Task events listeners
     socket.on("getTasksByProject", (projectId) =>
       getTasksByProject(socket, projectId)
     );
@@ -83,11 +88,18 @@ module.exports = (io) => {
     socket.on("updateTaskState", (taskBody) =>
       updateTaskState(socket, io, taskBody)
     );
+
+    //Activity events listeners
     socket.on("getActivities", (projectIds) =>
       getActivities(socket, projectIds)
     );
     getActivities;
     socket.on("newActivity", (activityBody) => newActivity(io, activityBody));
+
+    //Calendar events listeners
+    socket.on("getEvents", (projectId) =>
+    getEvents(socket, projectId)
+  );
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");

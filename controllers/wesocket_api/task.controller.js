@@ -28,6 +28,8 @@ const newTask = (socket, io, taskBody) => {
   })
     .then((task) => {
       io.to(project.toString()).emit("newTaskCreated", task);
+      io.to(project.toString()).emit("updateCalendar");
+      
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -49,11 +51,8 @@ const updateTask = (socket, io, taskBody) => {
     new: true,
   })
     .then((updatedTask) => {
-      console.log(
-        "🚀 ~ file: task.controller.js ~ line 53 ~ .then ~ updatedTask",
-        updatedTask
-      );
       io.to(updatedTask.project.toString()).emit("taskUpdated", updatedTask);
+      io.to(updatedTask.project.toString()).emit("updateCalendar");
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -83,6 +82,8 @@ const deleteTask = (io, taskId, projectId) => {
   Task.findByIdAndRemove(taskId)
     .then(() => {
       io.to(projectId.toString()).emit("taskDeleted", taskId);
+      io.to(projectId.toString()).emit("updateCalendar");
+
     })
     .catch((error) => res.json(error));
 };
