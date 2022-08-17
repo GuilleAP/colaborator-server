@@ -1,5 +1,6 @@
 const Project = require("../../models/Project.model");
 const mongoose = require("mongoose");
+const Activity = require("../../models/Activity.model");
 
 const getCurrentProjectsByUser = (socket, userId) => {
   Project.find({ active: true, team: userId })
@@ -71,7 +72,7 @@ const updateProject = (socket, io, projectBody) => {
       io.to(updatedProject._id.toString()).emit(
         "projectUpdated",
         updatedProject
-      ); 
+      );
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -81,7 +82,6 @@ const updateProject = (socket, io, projectBody) => {
 };
 
 const deleteProject = (io, projectId) => {
-
   Project.findByIdAndRemove(projectId)
     .then(() => {
       io.to(projectId).emit("projectDeleted", projectId);

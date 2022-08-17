@@ -15,8 +15,13 @@ const {
   newTask,
   updateTask,
   updateTaskState,
-  deleteTask
+  deleteTask,
 } = require("../controllers/wesocket_api/task.controller");
+
+const {
+  getActivities,
+  newActivity,
+} = require("../controllers/wesocket_api/activity.controller");
 
 let totalUserSocket = {};
 
@@ -72,8 +77,17 @@ module.exports = (io) => {
     );
     socket.on("newTask", (taskBody) => newTask(socket, io, taskBody));
     socket.on("updateTask", (taskBody) => updateTask(socket, io, taskBody));
-    socket.on("deleteTask", (taskId, projectId) => deleteTask(io, taskId, projectId));
-    socket.on("updateTaskState", (taskBody) => updateTaskState(socket, io, taskBody));
+    socket.on("deleteTask", (taskId, projectId) =>
+      deleteTask(io, taskId, projectId)
+    );
+    socket.on("updateTaskState", (taskBody) =>
+      updateTaskState(socket, io, taskBody)
+    );
+    socket.on("getActivities", (projectIds) =>
+      getActivities(socket, projectIds)
+    );
+    getActivities;
+    socket.on("newActivity", (activityBody) => newActivity(io, activityBody));
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
