@@ -82,16 +82,11 @@ const updateProject = (socket, io, projectBody) => {
 
 const deleteProject = (io, projectId) => {
 
-  Project.findByIdAndRemove(projectId);
-  console.log(
-    "🚀 ~ file: project.controller.js ~ line 100 ~ deleteProject ~ projectId",
-    projectId
-  );
   Project.findByIdAndRemove(projectId)
     .then(() => {
       io.to(projectId).emit("projectDeleted", projectId);
     })
-    .catch((error) => res.json(error));
+    .catch((err) => console.log(err));
 };
 
 const leaveProjectRoom = (socket, io, roomId, user) => {

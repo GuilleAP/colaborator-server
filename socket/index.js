@@ -14,6 +14,7 @@ const {
   getTasksByProject,
   newTask,
   updateTask,
+  deleteTask
 } = require("../controllers/wesocket_api/task.controller");
 
 let totalUserSocket = {};
@@ -69,8 +70,8 @@ module.exports = (io) => {
       getTasksByProject(socket, projectId)
     );
     socket.on("newTask", (taskBody) => newTask(socket, io, taskBody));
-
     socket.on("updateTask", (taskBody) => updateTask(socket, io, taskBody));
+    socket.on("deleteTask", (taskId, projectId) => deleteTask(io, taskId, projectId));
 
 
 
