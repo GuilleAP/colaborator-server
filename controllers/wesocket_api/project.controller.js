@@ -30,6 +30,13 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
           console.log("MEMBER: ", member._id, " IS NOT CONNECTED");
         }
       });
+      // project.team.map((member) => {
+      //   totalUserSocket.map((user) => {
+      //     if (member == user.userId) {
+      //       io.to(user.socketId).emit("newProjectCreated", project);
+      //     }
+      //   });
+      // });
     })
     .catch((err) => {
       if (err.code === 11000) {
