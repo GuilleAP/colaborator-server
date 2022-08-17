@@ -15,14 +15,10 @@ const getCurrentProjectsByUser = (socket, userId) => {
 
 const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   const { title, description, admin, team, active, tech } = projectBody;
-  console.log(
-    "🚀 ~ file: project.controller.js ~ line 20 ~ newProject ~ title",
-    title
-  );
-  // if (title === "" || !team.length) {
-  //   res.status(400).json({ message: "Provide a project title and a team" });
-  //   return;
-  // }
+  if (title === "" || !team.length) {
+    socket.emit("errorMessage", "Please provide a name and a team");
+    return;
+  }
   Project.create({ title, description, admin, team, active, tech, cards: [] })
     .then((project) => {
       // socket.emit('newProjectCreated', project)
@@ -34,16 +30,12 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
           console.log("MEMBER: ", member._id, " IS NOT CONNECTED");
         }
       });
-      // project.team.map((member) => {
-      //   totalUserSocket.map((user) => {
-      //     if (member == user.userId) {
-      //       io.to(user.socketId).emit("newProjectCreated", project);
-      //     }
-      //   });
-      // });
     })
-
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      if (err.code === 11000) {
+        socket.emit("errorMessage", "Duplicated project name");
+      }
+    });
 };
 
 const joinProjectRoom = (socket, io, roomId, user) => {
@@ -74,7 +66,10 @@ const updateProject = (socket, io, projectBody) => {
   //   res.status(400).json({ message: "Specified id is not valid" });
   //   return;
   // }
-
+  if (projectBody.title === "" || !projectBody.team.length) {
+    socket.emit("errorMessage", "Please provide a name and a team");
+    return;
+  }
   Project.findByIdAndUpdate(projectBody.projectId, projectBody, {
     new: true,
   })
@@ -87,7 +82,11 @@ const updateProject = (socket, io, projectBody) => {
       // socket.emit("projectUpdated", updatedProject);
       // io.sockets.in(updatedProject._id).emit("projectUpdated", updatedProject);
     })
-    .catch((error) => res.json(error));
+    .catch((err) => {
+      if (err.code === 11000) {
+        socket.emit("errorMessage", "Duplicated project name");
+      }
+    });
 };
 
 const deleteProject = (io, projectId) => {
@@ -96,8 +95,11 @@ const deleteProject = (io, projectId) => {
   //   return;
   // }
 
-  Project.findByIdAndRemove(projectId)
-  console.log("🚀 ~ file: project.controller.js ~ line 100 ~ deleteProject ~ projectId", projectId)
+  Project.findByIdAndRemove(projectId);
+  console.log(
+    "🚀 ~ file: project.controller.js ~ line 100 ~ deleteProject ~ projectId",
+    projectId
+  );
   Project.findByIdAndRemove(projectId)
     .then(() => {
       io.to(projectId).emit("projectDeleted", projectId);
