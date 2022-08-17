@@ -8,14 +8,13 @@ const {
   leaveProjectRoom,
   updateProject,
   deleteProject,
-  
 } = require("../controllers/wesocket_api/project.controller");
-
 
 const {
   getTasksByProject,
-  newTask
-} = require ("../controllers/wesocket_api/task.controller")
+  newTask,
+  updateTask,
+} = require("../controllers/wesocket_api/task.controller");
 
 let totalUserSocket = {};
 
@@ -40,31 +39,44 @@ module.exports = (io) => {
     );
 
     //Store user and it's socket
-    totalUserSocket[user._id] = socket.id
+    totalUserSocket[user._id] = socket.id;
     // let userSocketInfo = new Object();
     // userSocketInfo.userId = user._id;
     // userSocketInfo.socketId = socket.id;
     // totalUserSocket.push(userSocketInfo);
 
-    socket.on("getCurrentProjects", () => getCurrentProjectsByUser(socket, user._id));
-    socket.on("joinAllProjectsRoom", () => joinAllProjectsRoom(socket, io, user));
-    socket.on("joinProjectRoom", (roomId) => joinProjectRoom(socket, io, roomId, user));
-    socket.on("leaveProjectRoom", (roomId) => leaveProjectRoom(socket, io, roomId, user));
+    socket.on("getCurrentProjects", () =>
+      getCurrentProjectsByUser(socket, user._id)
+    );
+    socket.on("joinAllProjectsRoom", () =>
+      joinAllProjectsRoom(socket, io, user)
+    );
+    socket.on("joinProjectRoom", (roomId) =>
+      joinProjectRoom(socket, io, roomId, user)
+    );
+    socket.on("leaveProjectRoom", (roomId) =>
+      leaveProjectRoom(socket, io, roomId, user)
+    );
     socket.on("deleteProject", (projectId) => deleteProject(io, projectId));
-    socket.on("updateProject", (projectBody) => updateProject(socket, io, projectBody));
-        socket.on("newProject", (projectBody) =>
+    socket.on("updateProject", (projectBody) =>
+      updateProject(socket, io, projectBody)
+    );
+    socket.on("newProject", (projectBody) =>
       newProject(socket, io, projectBody, user, totalUserSocket)
     );
 
-    socket.on("getTasksByProject", (projectId) => getTasksByProject(socket, projectId));
+    socket.on("getTasksByProject", (projectId) =>
+      getTasksByProject(socket, projectId)
+    );
     socket.on("newTask", (taskBody) => newTask(socket, io, taskBody));
-    
+
+    socket.on("updateTask", (taskBody) => updateTask(socket, io, taskBody));
 
 
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
-      delete totalUserSocket[user._id]
+      delete totalUserSocket[user._id];
       socket.disconnect(true);
     });
 
@@ -85,7 +97,6 @@ module.exports = (io) => {
     socket.once("join_chat", (chatId) => {
       socket.join(chatId); //creates a socket room with chatId and adds the user to it
       console.log(`user: ${user.name} entering room: ${chatId}`);
-
     });
 
     socket.on("send_message", async (messageObj) => {

@@ -32,7 +32,6 @@ const newTask = (socket, io, taskBody) => {
   })
     .then((task) => {
       io.to(project.toString()).emit("newTaskCreated", task);
-      console.log("🚀 ~ file: task.controller.js ~ line 35 ~ .then ~ project", project)
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -41,7 +40,31 @@ const newTask = (socket, io, taskBody) => {
     });
 };
 
+
+const updateTask = (socket, io, taskBody) => {
+    if (taskBody.title === "" || !taskBody.limitDate) {
+      socket.emit("errorMessage", "Please provide a name and a team");
+      return;
+    }
+    Task.findByIdAndUpdate(taskBody.taskId, taskBody, {
+      new: true,
+    })
+      .then((updatedTask) => {
+        console.log("🚀 ~ file: task.controller.js ~ line 53 ~ .then ~ updatedTask", updatedTask)
+        io.to(updatedTask.project.toString()).emit(
+          "taskUpdated",
+          updatedTask
+        ); 
+      })
+      .catch((err) => {
+        if (err.code === 11000) {
+          socket.emit("errorMessage", "Duplicated task name");
+        }
+      });
+  };
+
 module.exports = {
   getTasksByProject,
-  newTask
+  newTask,
+  updateTask
 };
