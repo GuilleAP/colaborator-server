@@ -11,6 +11,7 @@ const getActivities = (socket, projectsIds) => {
 };
 
 const newActivity = (io, activityBody) => {
+console.log("🚀 ~ file: activity.controller.js ~ line 14 ~ newActivity ~ activityBody", activityBody)
   const { title, project, user } = activityBody;
   Activity.create({ title, project, user })
     .then((newActivity) => {
