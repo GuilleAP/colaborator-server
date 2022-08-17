@@ -12,12 +12,12 @@ module.exports = {
 
   postNewTask: (req, res) => {
     const projectId = req.params.projectId;
-    const { title, description, color, stat, limitDate } = req.body;
+    const { title, description, color, state, limitDate } = req.body;
 
     Task.create({
       title: title,
       description: description,
-      stat: stat,
+      state: stat,
       project: projectId,
       color: color,
       limitDate: limitDate,
@@ -45,7 +45,7 @@ module.exports = {
 
   putTaskState: (req, res) => {
     Task.findByIdAndUpdate(req.params.id, {
-      stat: req.params.state.toUpperCase(),
+      state: req.params.state.toUpperCase(),
     })
       .then((TaskUpdated) => {
         res.status(200).json(TaskUpdated);

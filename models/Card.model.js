@@ -12,7 +12,7 @@ const cardSchema = new Schema(
             type: String
         },
 
-        stat: {
+        state: {
             type: String,
             enum: ['TODO', 'PROGRESS', 'DONE']
         },

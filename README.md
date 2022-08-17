@@ -126,7 +126,7 @@ We will start our project by first documenting all of the routes and data models
         type: String
     },
 
-    stat: {
+    state: {
         type: String,
         enum: ['TODO', 'PROGRESS', 'DONE']
     },

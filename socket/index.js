@@ -14,6 +14,7 @@ const {
   getTasksByProject,
   newTask,
   updateTask,
+  updateTaskState,
   deleteTask
 } = require("../controllers/wesocket_api/task.controller");
 
@@ -72,8 +73,7 @@ module.exports = (io) => {
     socket.on("newTask", (taskBody) => newTask(socket, io, taskBody));
     socket.on("updateTask", (taskBody) => updateTask(socket, io, taskBody));
     socket.on("deleteTask", (taskId, projectId) => deleteTask(io, taskId, projectId));
-
-
+    socket.on("updateTaskState", (taskBody) => updateTaskState(socket, io, taskBody));
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");

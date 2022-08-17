@@ -12,7 +12,7 @@ const getTasksByProject = (socket, projectId) => {
 };
 
 const newTask = (socket, io, taskBody) => {
-  const { title, description, color, stat, project, limitDate } = taskBody;
+  const { title, description, color, state, project, limitDate } = taskBody;
 
   if (title === "" || !limitDate) {
     socket.emit("errorMessage", "Please provide a title and a limit date");
@@ -21,7 +21,7 @@ const newTask = (socket, io, taskBody) => {
   Task.create({
     title,
     description,
-    stat,
+    state,
     color,
     limitDate,
     project,
@@ -37,6 +37,10 @@ const newTask = (socket, io, taskBody) => {
 };
 
 const updateTask = (socket, io, taskBody) => {
+  console.log(
+    "🚀 ~ file: task.controller.js ~ line 40 ~ updateTask ~ taskBody",
+    taskBody
+  );
   if (taskBody.title === "" || !taskBody.limitDate) {
     socket.emit("errorMessage", "Please provide a name and a team");
     return;
@@ -58,18 +62,35 @@ const updateTask = (socket, io, taskBody) => {
     });
 };
 
-const deleteTask = (io, taskId, projectId) => {
+const updateTaskState = (socket, io, taskBody) => {
+  Task.findByIdAndUpdate(taskBody.taskId, {
+    state: taskBody.state.toUpperCase(),
+  },  {
+    new: true,
+  })
+    .then((updatedTask) => {
+      console.log("🚀 ~ file: task.controller.js ~ line 70 ~ .then ~ updatedTask", updatedTask)
+      io.to(updatedTask.project.toString()).emit("taskUpdated", updatedTask);
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        socket.emit("errorMessage", "Duplicated task name");
+      }
+    });
+};
 
-    Task.findByIdAndRemove(taskId)
-      .then(() => {
-        io.to(projectId.toString()).emit("taskDeleted", taskId);
-      })
-      .catch((error) => res.json(error));
-  };
+const deleteTask = (io, taskId, projectId) => {
+  Task.findByIdAndRemove(taskId)
+    .then(() => {
+      io.to(projectId.toString()).emit("taskDeleted", taskId);
+    })
+    .catch((error) => res.json(error));
+};
 
 module.exports = {
   getTasksByProject,
   newTask,
   updateTask,
-  deleteTask
+  updateTaskState,
+  deleteTask,
 };
