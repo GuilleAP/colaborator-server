@@ -93,7 +93,7 @@ module.exports = {
       .then((foundUser) => {
         if (!foundUser) {
           // If the user is not found, send an error response
-          res.status(407).json({ message: "User not found." });
+          res.status(400).json({ message: "User not found." });
           return;
         }
 
@@ -119,7 +119,7 @@ module.exports = {
           // Send the token as the response
           res.status(200).json({ authToken: authToken });
         } else {
-          res.status(401).json({ message: "Unable to authenticate the user" });
+          res.status(400).json({ message: "Unable to authenticate the user" });
         }
       })
       .catch((err) =>
