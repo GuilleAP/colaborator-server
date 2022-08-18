@@ -16,10 +16,6 @@ module.exports = {
 
   postSignUp: (req, res) => {
     const { email, password, name, role } = req.body;
-    console.log(
-      "🚀 ~ file: auth.routes.js ~ line 14 ~ router.post ~ role",
-      role
-    );
 
     // Check if email or password or name are provided as empty string
     if (email === "" || password === "" || name === "" || role === "") {
@@ -66,13 +62,15 @@ module.exports = {
       .then((createdUser) => {
         // Deconstruct the newly created user object to omit the password
         // We should never expose passwords publicly
-        const { email, name, role, _id } = createdUser;
+        if (createdUser) {
+          const { email, name, role, _id } = createdUser;
 
-        // Create a new object that doesn't expose the password
-        const user = { email, name, role, _id };
+          // Create a new object that doesn't expose the password
+          const user = { email, name, role, _id };
 
-        // Send a json response containing the user object
-        res.status(201).json({ user: user });
+          // Send a json response containing the user object
+          res.status(201).json({ user: user });
+        }
       })
       .catch((err) => {
         console.log(err);
