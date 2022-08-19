@@ -7,6 +7,8 @@ const { isAuthenticated } = require("./middleware/jwt.middleware"); // <== IMPOR
 const app = express();
 require("./config")(app);
 
+app.use(cors())
+
 // 👇 MIDDLEWARE MISSING
 const allRoutes = require("./routes");
 app.use("/colaborator-API", allRoutes);
