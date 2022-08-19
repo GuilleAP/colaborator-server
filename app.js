@@ -1,5 +1,6 @@
 require("dotenv/config");
 require("./db");
+const cors = require("cors")
 const express = require("express");
 
 const { isAuthenticated } = require("./middleware/jwt.middleware"); // <== IMPORT
