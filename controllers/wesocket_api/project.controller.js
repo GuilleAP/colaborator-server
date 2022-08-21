@@ -26,9 +26,10 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
       project.team.forEach((member) => {
         if (totalUserSocket.hasOwnProperty(member._id)) {
           io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
-          io.to(totalUserSocket[member._id]).emit("errorMessage", "");
         }
       });
+        socket.emit("errorMessage", "");
+
     })
     .catch((err) => {
       if (err.code === 11000) {
