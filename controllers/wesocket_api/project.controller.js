@@ -17,7 +17,7 @@ const getCurrentProjectsByUser = (socket, userId) => {
 const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   const { title, description, admin, team, active, tech } = projectBody;
   if (title === "" || !team.length) {
-    socket.emit("errorMessage", "Please provide a name and a team");
+    socket.emit("errorMessage", "Provide a name and a team");
     return;
   }
   Project.create({ title, description, admin, team, active, tech, cards: [] })
@@ -26,6 +26,7 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
       project.team.forEach((member) => {
         if (totalUserSocket.hasOwnProperty(member._id)) {
           io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
+          io.to(totalUserSocket[member._id]).emit("errorMessage", "");
         }
       });
     })
