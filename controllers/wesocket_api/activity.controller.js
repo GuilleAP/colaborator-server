@@ -5,7 +5,8 @@ const getActivities = (socket, projectsIds) => {
     .populate("project")
     .populate("user")
     .then((allActivities) => {
-      socket.emit("getActivities", allActivities);
+
+      socket.emit("getActivities", allActivities.reverse());
     })
     .catch((error) => res.json(error));
 };

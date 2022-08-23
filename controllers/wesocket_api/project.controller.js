@@ -22,7 +22,6 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
   }
   Project.create({ title, description, admin, team, active, tech, cards: [] })
     .then((project) => {
-      // socket.emit('newProjectCreated', project)
       project.team.forEach((member) => {
         if (totalUserSocket.hasOwnProperty(member._id)) {
           io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
