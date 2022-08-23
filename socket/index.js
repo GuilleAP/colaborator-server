@@ -127,20 +127,21 @@ module.exports = (io) => {
     socket.on("send_message", async (messageObj) => {
       const fullMessage = { ...messageObj.messageObj, sender: user };
 
+      console.log("🚀 ~ file: index.js ~ line 130 ~ socket.on ~ messageObj", messageObj)
       await Message.create(fullMessage);
       //Sends changes to all sockets users
       if (messageObj.isProjectChat) {
         socket
           .to(messageObj.messageObj.room.toString())
           .emit("receive_message", fullMessage);
-           console.log("🚀 ~ file: index.js ~ line 137 ~ socket.on ~ (messageObj.messageObj.room.toString()", messageObj.messageObj.room.toString())
-           //sends the message to all socket room users except the sender
+
+        //sends the message to all socket room users except the sender
         io.emit("receive_alert_message");
         socket.emit("receive_message", fullMessage); //sends the message to the sender
 
         return;
       }
-      io.to(messageObj.messageObj.room).emit("receive_message", fullMessage);
+      io.to( totalUserSocket [messageObj.messageObj.room]).emit("receive_message", fullMessage);
 
       socket.emit("receive_message", fullMessage); //sends the message to the sender
     });
