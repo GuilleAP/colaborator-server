@@ -97,9 +97,7 @@ module.exports = (io) => {
     socket.on("newActivity", (activityBody) => newActivity(io, activityBody));
 
     //Calendar events listeners
-    socket.on("getEvents", (projectId) =>
-    getEvents(socket, projectId)
-  );
+    socket.on("getEvents", (projectId) => getEvents(socket, projectId));
 
     socket.on("socket_dcn", () => {
       console.log("Socket disconnected");
@@ -107,18 +105,18 @@ module.exports = (io) => {
       socket.disconnect(true);
     });
 
-    //Projects controller
-    socket.on("render_projects", () => {
-      io.emit("receive_render_projects");
-      io.emit("receive_render_activity");
-    });
+    // //Projects controller
+    // socket.on("render_projects", () => {
+    //   io.emit("receive_render_projects");
+    //   io.emit("receive_render_activity");
+    // });
 
-    //Tasks controllers
-    socket.on("render_tasks", () => {
-      io.emit("receive_render_tasks");
-      io.emit("receive_render_activity");
-      io.emit("receive_render_calendar");
-    });
+    // //Tasks controllers
+    // socket.on("render_tasks", () => {
+    //   io.emit("receive_render_tasks");
+    //   io.emit("receive_render_activity");
+    //   io.emit("receive_render_calendar");
+    // });
 
     //Chat controllers
     socket.once("join_chat", (chatId) => {
@@ -127,12 +125,22 @@ module.exports = (io) => {
     });
 
     socket.on("send_message", async (messageObj) => {
-      const fullMessage = { ...messageObj, sender: user };
+      const fullMessage = { ...messageObj.messageObj, sender: user };
 
       await Message.create(fullMessage);
       //Sends changes to all sockets users
-      socket.to(fullMessage.chatId).emit("receive_message", fullMessage); //sends the message to all socket room users except the sender
-      io.emit("receive_alert_message");
+      if (messageObj.isProjectChat) {
+        socket
+          .to(messageObj.messageObj.room.toString())
+          .emit("receive_message", fullMessage);
+           console.log("🚀 ~ file: index.js ~ line 137 ~ socket.on ~ (messageObj.messageObj.room.toString()", messageObj.messageObj.room.toString())
+           //sends the message to all socket room users except the sender
+        io.emit("receive_alert_message");
+        socket.emit("receive_message", fullMessage); //sends the message to the sender
+
+        return;
+      }
+      io.to(messageObj.messageObj.room).emit("receive_message", fullMessage);
 
       socket.emit("receive_message", fullMessage); //sends the message to the sender
     });

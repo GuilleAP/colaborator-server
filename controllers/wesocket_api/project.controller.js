@@ -27,8 +27,7 @@ const newProject = (socket, io, projectBody, user, totalUserSocket) => {
           io.to(totalUserSocket[member._id]).emit("newProjectCreated", project);
         }
       });
-        socket.emit("errorMessage", "");
-
+      socket.emit("errorMessage", "");
     })
     .catch((err) => {
       if (err.code === 11000) {
@@ -44,7 +43,7 @@ const joinProjectRoom = (socket, io, roomId, user) => {
   // const numClients = clients ? clients.size : 0;
 
   console.log(
-    "🚀 ~ file: project.controller.js ~ line 76 ~ .then ~ clients",
+    "🚀 ~ file: project.controller.js ~ line 76 ~ .then ~ ROOMS",
     io.sockets.adapter.rooms
   );
 };
