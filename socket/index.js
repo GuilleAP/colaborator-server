@@ -105,19 +105,6 @@ module.exports = (io) => {
       socket.disconnect(true);
     });
 
-    // //Projects controller
-    // socket.on("render_projects", () => {
-    //   io.emit("receive_render_projects");
-    //   io.emit("receive_render_activity");
-    // });
-
-    // //Tasks controllers
-    // socket.on("render_tasks", () => {
-    //   io.emit("receive_render_tasks");
-    //   io.emit("receive_render_activity");
-    //   io.emit("receive_render_calendar");
-    // });
-
     //Chat controllers
     socket.once("join_chat", (chatId) => {
       socket.join(chatId); //creates a socket room with chatId and adds the user to it
@@ -127,22 +114,26 @@ module.exports = (io) => {
     socket.on("send_message", async (messageObj) => {
       const fullMessage = { ...messageObj.messageObj, sender: user };
 
-      console.log("🚀 ~ file: index.js ~ line 130 ~ socket.on ~ messageObj", messageObj)
       await Message.create(fullMessage);
-      //Sends changes to all sockets users
+
+
       if (messageObj.isProjectChat) {
+        //If is a project chat, sends the message to all project room
         socket
           .to(messageObj.messageObj.room.toString())
           .emit("receive_message", fullMessage);
 
-        //sends the message to all socket room users except the sender
-        io.emit("receive_alert_message");
         socket.emit("receive_message", fullMessage); //sends the message to the sender
 
         return;
       }
-      io.to( totalUserSocket [messageObj.messageObj.room]).emit("receive_message", fullMessage);
 
+    //If its a direct chat, sends the message to the user (privat event) and to the sender
+
+      io.to(totalUserSocket[messageObj.messageObj.room]).emit(
+        "receive_message",
+        fullMessage
+      );
       socket.emit("receive_message", fullMessage); //sends the message to the sender
     });
   });

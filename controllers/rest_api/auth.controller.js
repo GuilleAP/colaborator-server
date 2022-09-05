@@ -16,6 +16,7 @@ module.exports = {
 
   postSignUp: (req, res) => {
     const { email, password, name, role } = req.body;
+    console.log("🚀 ~ file: auth.controller.js ~ line 19 ~ req.body", req.body)
 
     // Check if email or password or name are provided as empty string
     if (email === "" || password === "" || name === "" || role === "") {

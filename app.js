@@ -1,6 +1,6 @@
 require("dotenv/config");
 require("./db");
-const cors = require("cors")
+const cors = require("cors");
 const express = require("express");
 
 const { isAuthenticated } = require("./middleware/jwt.middleware"); // <== IMPORT
@@ -8,7 +8,7 @@ const { isAuthenticated } = require("./middleware/jwt.middleware"); // <== IMPOR
 const app = express();
 require("./config")(app);
 
-app.use(cors())
+app.use(cors());
 
 // 👇 MIDDLEWARE MISSING
 const allRoutes = require("./routes");
@@ -21,15 +21,20 @@ const userRouter = require("./routes/user.routes");
 app.use("/colaborator-API/users", userRouter);
 
 const projectRoutes = require("./routes/project.routes");
-app.use("/colaborator-API/projects",isAuthenticated, projectRoutes);
+app.use("/colaborator-API/projects", isAuthenticated, projectRoutes);
 
 const cardRoutes = require("./routes/card.routes");
-app.use("/colaborator-API/projects",isAuthenticated, cardRoutes);
+app.use("/colaborator-API/projects", isAuthenticated, cardRoutes);
 
 const chatRoutes = require("./routes/chat.routes");
 app.use("/colaborator-API/chat", isAuthenticated, chatRoutes);
 
 const activityRoutes = require("./routes/activity.routes");
 app.use("/colaborator-API/activity", isAuthenticated, activityRoutes);
+
+if (process.env.NODE_ENV === "test") {
+  const testingRoutes = require("./routes/testing.routes");
+  app.use("/colaborator-API/testing", testingRoutes);
+}
 
 module.exports = app;
