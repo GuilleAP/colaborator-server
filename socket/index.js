@@ -114,25 +114,32 @@ module.exports = (io) => {
     socket.on("send_message", async (messageObj) => {
       const fullMessage = { ...messageObj.messageObj, sender: user };
 
+      console.log("🚀 ~ file: index.js ~ line 146 ~ socket.on ~ messageObj", messageObj)
       await Message.create(fullMessage);
-
 
       if (messageObj.isProjectChat) {
         //If is a project chat, sends the message to all project room
+
         socket
           .to(messageObj.messageObj.room.toString())
           .emit("receive_message", fullMessage);
-
+        socket
+          .to(messageObj.messageObj.room.toString())
+          .emit("receive_alert_message", {fullMessage:fullMessage, isProjectChat: true});
         socket.emit("receive_message", fullMessage); //sends the message to the sender
 
         return;
       }
 
-    //If its a direct chat, sends the message to the user (privat event) and to the sender
+      //If its a direct chat, sends the message to the user (privat event) and to the sender
 
       io.to(totalUserSocket[messageObj.messageObj.room]).emit(
         "receive_message",
         fullMessage
+      );
+      io.to(totalUserSocket[messageObj.messageObj.room]).emit(
+        "receive_alert_message",
+        {fullMessage:fullMessage, isProjectChat:false}
       );
       socket.emit("receive_message", fullMessage); //sends the message to the sender
     });
